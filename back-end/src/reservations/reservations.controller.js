@@ -8,7 +8,7 @@ const Reservation = require("./Reservation.class");
  * CRUD
  */
 async function list(req, res) {
-  res.json({ data: await service.listFilteredByDate(req.query.date) });
+  res.json({ data: await service.list(req.query.date) });
 }
 
 async function create(req, res) {
@@ -30,24 +30,43 @@ async function hasRequiredProperties(req, res, next) {
     data.reservation_time,
     data.people
   );
-
   if (reservation.hasAllProps()) {
     res.locals.reservation = reservation;
     return next();
-  } else {
-    const missingProp = reservation.getFirstMissingProp();
-    return next({ status: 400, message: `Missing property: ${missingProp}` });
   }
+  const missingProps = reservation.getMissingProps();
+  let message = "Missing properties: ";
+  const length = missingProps.length;
+  for (let i = 0; i < length; i++) {
+    const prop = missingProps[i];
+    message += prop;
+    if (i < length - 1) {
+      message += ", ";
+    } else {
+      message += ".";
+    }
+  }
+  return next({ status: 400, message });
 }
 
 async function propsAreValid(req, res, next) {
   const reservation = res.locals.reservation;
-  const invalidProp = reservation.getInvalidProp();
-  if (reservation.allPropsAreValid() && !invalidProp) {
+  const invalidProps = reservation.getInvalidProps();
+  if (reservation.allPropsAreValid() && invalidProps.length === 0) {
     return next();
-  } else {
-    return next({ status: 400, message: `Invalid property: ${invalidProp}` });
   }
+  let message = "Invalid properties: ";
+  const length = invalidProps.length;
+  for (let i = 0; i < length; i++) {
+    const prop = invalidProps[i];
+    message += prop;
+    if (i < length - 1) {
+      message += ", ";
+    } else {
+      message += ".";
+    }
+  }
+  return next({ status: 400, message });
 }
 
 module.exports = {

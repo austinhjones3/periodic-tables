@@ -1,6 +1,6 @@
 const knex = require("../db/connection");
 
-function listFilteredByDate(reservation_date) {
+function list(reservation_date) {
   return knex("reservations")
     .where({ reservation_date })
     .orderBy("reservation_time", "asc");
@@ -13,6 +13,6 @@ function create(reservation) {
 }
 
 module.exports = {
-  listFilteredByDate,
+  list,
   create,
 };

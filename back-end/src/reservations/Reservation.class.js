@@ -64,26 +64,32 @@ module.exports = class Reservation {
     };
   }
 
-  getInvalidProp() {
+  getInvalidProps() {
     const regExForProps = this.regExForProps;
     const propNames = this.propNames;
+    const result = [];
+
     if (typeof this.people != "number") {
-      return "people";
+      result.push("people");
     }
 
     for (let prop of propNames) {
       if (!regExForProps[prop].test(this[prop])) {
-        return prop;
+        result.push(prop);
       }
     }
+
+    return result;
   }
 
-  getFirstMissingProp() {
+  getMissingProps() {
     const propNames = this.propNames;
+    const result = [];
     for (let prop of propNames) {
       if (!this[prop]) {
-        return prop;
+        result.push(prop);
       }
     }
+    return result;
   }
 };
