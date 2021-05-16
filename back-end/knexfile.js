@@ -8,7 +8,7 @@ require("dotenv").config();
 const path = require("path");
 
 const {
-  NODE_ENV = "production",
+  NODE_ENV = "development",
   DATABASE_URL = "postgresql://postgres@localhost/postgres",
   DATABASE_URL_DEVELOPMENT = "postgresql://postgres@localhost/postgres",
   DATABASE_URL_TEST = "postgresql://postgres@localhost/postgres",
@@ -19,9 +19,9 @@ const {
 let URL;
 
 if (NODE_ENV === "production") URL = DATABASE_URL;
-else if (NODE_ENV === "development") URL = DATABASE_URL_DEVELOPMENT;
+else if (NODE_ENV === "preview") URL = DATABASE_URL_PREVIEW;
 else if (NODE_ENV === "test") URL = DATABASE_URL_TEST;
-else URL = DATABASE_URL_PREVIEW;
+else URL = DATABASE_URL_DEVELOPMENT;
 
 module.exports = {
   development: {

@@ -1,13 +1,13 @@
 const knex = require("../db/connection");
 
-function list(reservation_date) {
-  return knex("reservations")
+async function list(reservation_date) {
+  return await knex("reservations")
     .where({ reservation_date })
     .orderBy("reservation_time", "asc");
 }
 
-function create(reservation) {
-  return knex("reservations")
+async function create(reservation) {
+  return await knex("reservations")
     .insert(reservation, "*")
     .then((response) => response[0]);
 }
