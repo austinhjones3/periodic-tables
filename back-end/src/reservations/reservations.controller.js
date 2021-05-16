@@ -19,7 +19,7 @@ async function create(req, res) {
 /**
  * MIDDLEWARE
  */
-async function hasRequiredProperties(req, res, next) {
+function hasRequiredProperties(req, res, next) {
   const { data } = req.body;
   if (!data) return next({ status: 400, message: "No data to create." });
   const reservation = new Reservation(
@@ -35,38 +35,52 @@ async function hasRequiredProperties(req, res, next) {
     return next();
   }
   const missingProps = reservation.getMissingProps();
-  let message = "Missing properties: ";
-  const length = missingProps.length;
-  for (let i = 0; i < length; i++) {
-    const prop = missingProps[i];
-    message += prop;
-    if (i < length - 1) {
-      message += ", ";
-    } else {
-      message += ".";
-    }
-  }
+  const message = _getPropsErrorMessage("Missing", missingProps);
   return next({ status: 400, message });
 }
 
-async function propsAreValid(req, res, next) {
+function propsAreValid(req, res, next) {
   const reservation = res.locals.reservation;
   const invalidProps = reservation.getInvalidProps();
   if (reservation.allPropsAreValid() && invalidProps.length === 0) {
     return next();
   }
-  let message = "Invalid properties: ";
-  const length = invalidProps.length;
-  for (let i = 0; i < length; i++) {
-    const prop = invalidProps[i];
+  const message = _getPropsErrorMessage("Invalid", invalidProps);
+  return next({ status: 400, message });
+}
+
+function timeIsValid(req, res, next) {
+  const reservationDate = new Date(res.locals.reservation.reservation_date);
+  const today = new Date();
+  console.log("today time");
+  console.log(today.getTime(), typeof today.getTime());
+  if (reservationDate.getUTCDay() === 2) {
+    return next({ status: 400, message: `The restaurant is closed on Tuesdays!` });
+  }
+
+  if (today.getTime() > reservationDate.getTime()) {
+    return next({
+      status: 400,
+      message: "Please instead reserve a time in the future.",
+    });
+  }
+
+  return next();
+}
+
+function _getPropsErrorMessage(missingOrInvalid, props) {
+  let message = `${missingOrInvalid} properties: `;
+  const len = props.length;
+  for (let i = 0; i < len; i++) {
+    const prop = props[i];
     message += prop;
-    if (i < length - 1) {
+    if (i < len - 1) {
       message += ", ";
     } else {
       message += ".";
     }
   }
-  return next({ status: 400, message });
+  return message;
 }
 
 module.exports = {
@@ -74,6 +88,7 @@ module.exports = {
   create: [
     asyncErrorBoundary(hasRequiredProperties),
     asyncErrorBoundary(propsAreValid),
+    asyncErrorBoundary(timeIsValid),
     asyncErrorBoundary(create),
   ],
 };
