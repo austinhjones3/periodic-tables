@@ -52,8 +52,7 @@ function propsAreValid(req, res, next) {
 function timeIsValid(req, res, next) {
   const reservationDate = new Date(res.locals.reservation.reservation_date);
   const today = new Date();
-  console.log("today time");
-  console.log(today.getTime(), typeof today.getTime());
+
   if (reservationDate.getUTCDay() === 2) {
     return next({ status: 400, message: `The restaurant is closed on Tuesdays!` });
   }
@@ -62,6 +61,17 @@ function timeIsValid(req, res, next) {
     return next({
       status: 400,
       message: "Please instead reserve a time in the future.",
+    });
+  }
+
+  const reservationTime = Number(
+    `${reservationDate.getUTCHours()}${reservationDate.getUTCMinutes()}`
+  );
+
+  if (reservationTime < 930 || reservationTime > 2130) {
+    return next({
+      status: 400,
+      message: "Please reserve a time within business hours",
     });
   }
 
