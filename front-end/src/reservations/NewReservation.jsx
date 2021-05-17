@@ -22,7 +22,7 @@ export default function NewReservation({ reservations, setReservations }) {
     event.preventDefault();
     createReservation(formData)
       .then(() => history.push(`/dashboard?date=${formData.reservation_date}`))
-      .catch(console.log("Deez nuts"));
+      .catch(console.log);
     history.push(`/dashboard?date=${formData.reservation_date}`);
   }
 
@@ -58,7 +58,7 @@ export default function NewReservation({ reservations, setReservations }) {
           <label htmlFor="mobile_number">Mobile Number</label>
           <input
             required
-            type="tel"
+            type="text"
             name="mobile_number"
             value={formData.mobile_number}
             className="form-control"
