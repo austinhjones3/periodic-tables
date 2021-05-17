@@ -75,5 +75,7 @@ export async function createReservation(reservation, signal) {
     headers,
     method: "POST",
     signal,
-  });
+  })
+    .then(formatReservationDate)
+    .then(formatReservationTime);
 }
