@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 
-export default function NewReservation() {
+export default function NewReservation({ reservations, setReservations }) {
   const history = useHistory();
   const [formData, setFormData] = useState({
     first_name: "",
