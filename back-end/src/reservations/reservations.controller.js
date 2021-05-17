@@ -12,8 +12,7 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-  const data = await service.create(res.locals.reservation);
-  res.status(201).json({ data });
+  res.status(201).json({ data: await service.create(res.locals.reservation) });
 }
 
 /**
