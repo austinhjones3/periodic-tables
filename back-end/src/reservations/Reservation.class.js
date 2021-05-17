@@ -49,7 +49,8 @@ module.exports = class Reservation {
       regExForProps.mobile_number.test(this.mobile_number) &&
       regExForProps.reservation_time.test(this.reservation_time) &&
       regExForProps.reservation_date.test(this.reservation_date) &&
-      regExForProps.people.test(this.people)
+      regExForProps.people.test(this.people) &&
+      typeof this.people === "number"
     );
   }
 
@@ -64,7 +65,7 @@ module.exports = class Reservation {
     };
   }
 
-  getInvalidProps() {
+  get invalidProps() {
     const regExForProps = this.regExForProps;
     const propNames = this.propNames;
     const result = [];
@@ -82,7 +83,7 @@ module.exports = class Reservation {
     return result;
   }
 
-  getMissingProps() {
+  get missingProps() {
     const propNames = this.propNames;
     const result = [];
     for (let prop of propNames) {
