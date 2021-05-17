@@ -67,6 +67,21 @@ function dateIsNotATuesday(req, res, next) {
   next();
 }
 
+function timeIsWithinBusinessHours(req, res, next) {
+  const reservationDate = res.locals.reservationDate;
+  const reservationTime = Number(
+    `${reservationDate.getUTCHours()}${reservationDate.getUTCMinutes()}`
+  );
+
+  if (reservationTime < 930 || reservationTime > 2130) {
+    return next({
+      status: 400,
+      message: "Please reserve a time within business hours.",
+    });
+  }
+  next();
+}
+
 function _getPropsErrorMessage(missingOrInvalid, props) {
   let message = `${missingOrInvalid} properties: `;
   const len = props.length;
@@ -89,6 +104,7 @@ module.exports = {
     asyncErrorBoundary(propsAreValid),
     asyncErrorBoundary(dateIsInTheFuture),
     asyncErrorBoundary(dateIsNotATuesday),
+    asyncErrorBoundary(timeIsWithinBusinessHours),
     asyncErrorBoundary(create),
   ],
 };
