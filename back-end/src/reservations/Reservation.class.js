@@ -1,3 +1,13 @@
+/**
+ * Creates a new Reservation.
+ * @class
+ * @param {String} first_name - all names accepted, no format constraints
+ * @param {String} last_name - all names accepted, no format constraints
+ * @param {String} mobile_number - format: XXX-XXX-XXXX
+ * @param {String} reservation_date - format: YYYY-MM-DD
+ * @param {String} reservation_time - format: HH:MM (24H)
+ * @param {Number} people - integer up to 3 digits representing number of people
+ */
 module.exports = class Reservation {
   constructor(
     first_name = null,
@@ -15,6 +25,11 @@ module.exports = class Reservation {
     this.people = people;
   }
 
+  /**
+   * @method propNames()
+   * @returns {String[]}
+   * The list of property names to be used in other methods.
+   */
   get propNames() {
     return [
       "first_name",
@@ -26,6 +41,11 @@ module.exports = class Reservation {
     ];
   }
 
+  /**
+   * @method hasAllProps()
+   * @returns {Boolean}
+   * True or false representing the presence of all necessary props.
+   */
   hasAllProps() {
     return (
       this.first_name &&
@@ -38,11 +58,10 @@ module.exports = class Reservation {
   }
 
   /**
-   * time: 00:00:00
-   * date: YYYY-MM-DD
-   * phone: 000-000-0000
+   * @method allPropsAreValid()
+   * @returns {Boolean}
+   * True or false representing the validity of all necessary props.
    */
-
   allPropsAreValid() {
     const regExForProps = this.regExForProps;
     return (
@@ -54,6 +73,11 @@ module.exports = class Reservation {
     );
   }
 
+  /**
+   * @method regExForProps() - getter
+   * @returns {RegEx{}}
+   * Each constructed property is assigned their appropriate formatting.
+   */
   get regExForProps() {
     return {
       first_name: /.*/,
@@ -65,6 +89,11 @@ module.exports = class Reservation {
     };
   }
 
+  /**
+   * @method invalidProps() - getter
+   * @returns {String[]}
+   * The names of the properties that are formatted incorrectly.
+   */
   get invalidProps() {
     const regExForProps = this.regExForProps;
     const propNames = this.propNames;
@@ -83,6 +112,11 @@ module.exports = class Reservation {
     return result;
   }
 
+  /**
+   * @method missingProps() - getter
+   * @returns {String[]}
+   * The names of the properties that are missing.
+   */
   get missingProps() {
     const propNames = this.propNames;
     const result = [];
