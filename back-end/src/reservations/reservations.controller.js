@@ -48,6 +48,25 @@ function propsAreValid(req, res, next) {
   return next({ status: 400, message });
 }
 
+function dateIsInTheFuture(req, res, next) {
+  res.locals.reservationDate = new Date(res.locals.reservation.reservation_date);
+  const today = new Date();
+  if (today.getTime() > res.locals.reservationDate.getTime()) {
+    return next({
+      status: 400,
+      message: "Please book your reservation for a future date.",
+    });
+  }
+  next();
+}
+
+function dateIsNotATuesday(req, res, next) {
+  if (res.locals.reservationDate.getUTCDay() === 2) {
+    return next({ status: 400, message: "The restaurant is closed on Tuesdays!" });
+  }
+  next();
+}
+
 function _getPropsErrorMessage(missingOrInvalid, props) {
   let message = `${missingOrInvalid} properties: `;
   const len = props.length;
@@ -68,6 +87,8 @@ module.exports = {
   create: [
     asyncErrorBoundary(hasRequiredProperties),
     asyncErrorBoundary(propsAreValid),
+    asyncErrorBoundary(dateIsInTheFuture),
+    asyncErrorBoundary(dateIsNotATuesday),
     asyncErrorBoundary(create),
   ],
 };
