@@ -71,6 +71,7 @@ export default function NewReservation({ reservations, setReservations }) {
           <input
             required
             type="date"
+            pattern="\d{4}-\d{2}-\d{2}"
             name="reservation_date"
             value={formData.reservation_date}
             className="form-control"
@@ -82,6 +83,7 @@ export default function NewReservation({ reservations, setReservations }) {
           <input
             required
             type="time"
+            pattern="[0-9]{2}:[0-9]{2}"
             name="reservation_time"
             value={formData.reservation_time}
             className="form-control"
