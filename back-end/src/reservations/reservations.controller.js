@@ -1,9 +1,7 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const Reservation = require("./Reservation.class");
-/**
- * List handler for reservation resources
- */
+
 /**
  * CRUD
  */
