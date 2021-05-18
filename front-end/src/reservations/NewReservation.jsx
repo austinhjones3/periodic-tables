@@ -4,6 +4,7 @@ import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import getTimeInteger from "../common/getTimeInteger";
 import getDateInteger from "../common/getDateInteger";
+import formatReservationDate from "../utils/format-reservation-date";
 
 export default function NewReservation({ reservations, setReservations }) {
   const history = useHistory();
@@ -30,6 +31,8 @@ export default function NewReservation({ reservations, setReservations }) {
     const reservationTime = getTimeInteger(reservationDate);
     const dateNow = getDateInteger(today);
     const dateOfReservation = getDateInteger(reservationDate);
+    // const dateNow = getDateInteger(today);
+    // const dateOfReservation = getDateInteger(reservationDate);
 
     if (reservationDate.getUTCDay() === 2) {
       errorsArr.push("The restaurant is closed on Tuesdays");
