@@ -10,7 +10,12 @@ async function create(table) {
     .then((response) => response[0]);
 }
 
+async function read(table_id) {
+  return await knex("tables").where({ table_id }).first();
+}
+
 module.exports = {
   list,
   create,
+  read,
 };
