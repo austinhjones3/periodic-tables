@@ -88,7 +88,7 @@ function timeIsWithinBusinessHours(req, res, next) {
 
 async function reservationExists(req, res, next) {
   const { reservation_id: id } = req.params;
-  const reservation = await service.read(Number(id));
+  const reservation = await service.read(id);
   if (reservation) {
     console.log(`\nTHE RESERVATION EXISTS`);
     console.log(reservation);
