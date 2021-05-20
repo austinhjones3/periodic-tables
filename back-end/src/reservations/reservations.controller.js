@@ -64,10 +64,8 @@ function dateIsNotATuesday(req, res, next) {
 
 function timeIsWithinBusinessHours(req, res, next) {
   const reservationDate = res.locals.reservationDate;
-  const reservationTime = Number(
-    `${reservationDate.getUTCHours()}${reservationDate.getUTCMinutes()}`
-  );
-
+  // UNARY OPERATOR      __
+  const reservationTime = +res.locals.reservation.reservation_time.replace(":", "");
   if (reservationTime < 930 || reservationTime > 2130) {
     return next({
       status: 400,
