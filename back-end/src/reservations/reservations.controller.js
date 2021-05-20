@@ -14,6 +14,12 @@ async function create(req, res) {
   res.status(201).json({ data: await service.create(res.locals.reservation) });
 }
 
+async function read(req, res) {
+  console.log(`\nINSIDE THE RESPONSE FUNCTION`);
+  console.log(res.locals.reservations);
+  res.json({ data: res.locals.reservation });
+}
+
 /**
  * MIDDLEWARE
  */
@@ -80,6 +86,19 @@ function timeIsWithinBusinessHours(req, res, next) {
   next();
 }
 
+async function reservationExists(req, res, next) {
+  const { reservation_id: id } = req.params;
+  const reservation = await service.read(Number(id));
+  if (reservation) {
+    console.log(`\nTHE RESERVATION EXISTS`);
+    console.log(reservation);
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    return next({ status: 404, message: `Reservation ID: ${id} not found.` });
+  }
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -90,4 +109,5 @@ module.exports = {
     asyncErrorBoundary(timeIsWithinBusinessHours),
     asyncErrorBoundary(create),
   ],
+  read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
 };

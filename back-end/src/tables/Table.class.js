@@ -28,6 +28,11 @@ module.exports = class Table {
     return this.table_name && this.capacity;
   }
 
+  /**
+   * @method missingProps() - getter
+   * @returns {String[]}
+   * The names of the properties that are missing.
+   */
   get missingProps() {
     const propNames = this.propNames;
     const result = [];
