@@ -63,7 +63,6 @@ function dateIsNotATuesday(req, res, next) {
 }
 
 function timeIsWithinBusinessHours(req, res, next) {
-  const reservationDate = res.locals.reservationDate;
   // UNARY OPERATOR      __
   const reservationTime = +res.locals.reservation.reservation_time.replace(":", "");
   console.log(typeof reservationTime, reservationTime);
