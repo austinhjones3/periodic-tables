@@ -4,7 +4,7 @@ import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { getDateInt, getTimeInt } from "../utils/timeIntegers";
 
-export default function NewReservation({ reservations, setReservations }) {
+export default function NewReservation() {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
@@ -23,15 +23,12 @@ export default function NewReservation({ reservations, setReservations }) {
 
   function getDateErrors() {
     const errorsArr = [];
-    // working
     const today = new Date();
     const reservationDate = new Date(
       `${formData.reservation_date} ${formData.reservation_time}`
     );
-    // working
     const timeNowInt = getTimeInt(today);
     const resTimeInt = getTimeInt(reservationDate);
-    // working
     const dateNowInt = getDateInt(today);
     const resDateInt = getDateInt(reservationDate);
 
@@ -49,23 +46,6 @@ export default function NewReservation({ reservations, setReservations }) {
     }
     return errorsArr;
   }
-
-  // function getDateErrors() {
-  //   const errorsArr = [];
-  //   const today = new Date();
-  //   const reservationDate = new Date(
-  //     `${formData.reservation_date} ${formData.reservation_time}`
-  //   );
-  //   console.log("\nAHAWHA HAHAHAHAHAHAHAHA");
-  //   console.log(reservationDate);
-  //   const timeNow = getTimeInteger(today);
-
-  //   const reservationTime = getTimeInteger(reservationDate);
-  //   const dateNow = getDateInteger(today);
-  //   const dateOfReservation = getDateInteger(reservationDate);
-
-  //   return errorsArr;
-  // }
 
   function handleSubmit(event) {
     event.preventDefault();
