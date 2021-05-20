@@ -15,8 +15,6 @@ async function create(req, res) {
 }
 
 async function read(req, res) {
-  console.log(`\nINSIDE THE RESPONSE FUNCTION`);
-  console.log(res.locals.reservations);
   res.json({ data: res.locals.reservation });
 }
 
@@ -26,14 +24,7 @@ async function read(req, res) {
 function hasRequiredProperties(req, res, next) {
   const { data } = req.body;
   if (!data) return next({ status: 400, message: "No data to create." });
-  const reservation = new Reservation(
-    data.first_name,
-    data.last_name,
-    data.mobile_number,
-    data.reservation_date,
-    data.reservation_time,
-    data.people
-  );
+  const reservation = new Reservation(data);
 
   if (reservation.hasAllProps()) {
     res.locals.reservation = reservation;
@@ -90,8 +81,6 @@ async function reservationExists(req, res, next) {
   const { reservation_id: id } = req.params;
   const reservation = await service.read(id);
   if (reservation) {
-    console.log(`\nTHE RESERVATION EXISTS`);
-    console.log(reservation);
     res.locals.reservation = reservation;
     return next();
   } else {
