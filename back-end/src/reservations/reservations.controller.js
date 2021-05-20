@@ -66,7 +66,8 @@ function timeIsWithinBusinessHours(req, res, next) {
   const reservationDate = res.locals.reservationDate;
   // UNARY OPERATOR      __
   const reservationTime = +res.locals.reservation.reservation_time.replace(":", "");
-  if (reservationTime < 930 || reservationTime > 2130) {
+  console.log(typeof reservationTime, reservationTime);
+  if (reservationTime < 1030 || reservationTime > 2130) {
     return next({
       status: 400,
       message: "Please reserve a time within business hours.",
