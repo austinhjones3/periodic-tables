@@ -1,6 +1,7 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const Reservation = require("./Reservation.class");
+const { getPropsErrorMessage } = require("../common");
 
 /**
  * CRUD
@@ -32,7 +33,7 @@ function hasRequiredProperties(req, res, next) {
     res.locals.reservation = reservation;
     return next();
   }
-  const message = _getPropsErrorMessage("Missing", reservation.missingProps);
+  const message = getPropsErrorMessage("Missing", reservation.missingProps);
   return next({ status: 400, message });
 }
 
@@ -41,7 +42,7 @@ function propsAreValid(req, res, next) {
   if (reservation.allPropsAreValid()) {
     return next();
   }
-  const message = _getPropsErrorMessage("Invalid", reservation.invalidProps);
+  const message = getPropsErrorMessage("Invalid", reservation.invalidProps);
   return next({ status: 400, message });
 }
 
@@ -77,21 +78,6 @@ function timeIsWithinBusinessHours(req, res, next) {
     });
   }
   next();
-}
-
-function _getPropsErrorMessage(missingOrInvalid, props) {
-  let message = `${missingOrInvalid} properties: `;
-  const len = props.length;
-  for (let i = 0; i < len; i++) {
-    const prop = props[i];
-    message += prop;
-    if (i < len - 1) {
-      message += ", ";
-    } else {
-      message += ".";
-    }
-  }
-  return message;
 }
 
 module.exports = {

@@ -1,4 +1,6 @@
 module.exports.seed = function (knex) {
   // Deletes ALL existing entries
-  return knex("reservations").del();
+  return await knex("reservations")
+    .del()
+    .then(() => knex("tables").del());
 };
