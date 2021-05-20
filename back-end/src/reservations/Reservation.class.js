@@ -9,14 +9,14 @@
  * @param {Number} people - integer up to 3 digits representing number of people
  */
 module.exports = class Reservation {
-  constructor(
+  constructor({
     first_name = null,
     last_name = null,
     mobile_number = null,
     reservation_date = null,
     reservation_time = null,
-    people = null
-  ) {
+    people = null,
+  }) {
     this.first_name = first_name;
     this.last_name = last_name;
     this.mobile_number = mobile_number;

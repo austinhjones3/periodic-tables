@@ -1,6 +1,7 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const Reservation = require("./Reservation.class");
+const { getPropsErrorMessage } = require("../common");
 
 /**
  * CRUD
@@ -13,26 +14,23 @@ async function create(req, res) {
   res.status(201).json({ data: await service.create(res.locals.reservation) });
 }
 
+async function read(req, res) {
+  res.json({ data: res.locals.reservation });
+}
+
 /**
  * MIDDLEWARE
  */
 function hasRequiredProperties(req, res, next) {
   const { data } = req.body;
   if (!data) return next({ status: 400, message: "No data to create." });
-  const reservation = new Reservation(
-    data.first_name,
-    data.last_name,
-    data.mobile_number,
-    data.reservation_date,
-    data.reservation_time,
-    data.people
-  );
+  const reservation = new Reservation(data);
 
   if (reservation.hasAllProps()) {
     res.locals.reservation = reservation;
     return next();
   }
-  const message = _getPropsErrorMessage("Missing", reservation.missingProps);
+  const message = getPropsErrorMessage("Missing", reservation.missingProps);
   return next({ status: 400, message });
 }
 
@@ -41,7 +39,7 @@ function propsAreValid(req, res, next) {
   if (reservation.allPropsAreValid()) {
     return next();
   }
-  const message = _getPropsErrorMessage("Invalid", reservation.invalidProps);
+  const message = getPropsErrorMessage("Invalid", reservation.invalidProps);
   return next({ status: 400, message });
 }
 
@@ -66,11 +64,10 @@ function dateIsNotATuesday(req, res, next) {
 
 function timeIsWithinBusinessHours(req, res, next) {
   const reservationDate = res.locals.reservationDate;
-  const reservationTime = Number(
-    `${reservationDate.getUTCHours()}${reservationDate.getUTCMinutes()}`
-  );
-
-  if (reservationTime < 930 || reservationTime > 2130) {
+  // UNARY OPERATOR      __
+  const reservationTime = +res.locals.reservation.reservation_time.replace(":", "");
+  console.log(typeof reservationTime, reservationTime);
+  if (reservationTime < 1030 || reservationTime > 2130) {
     return next({
       status: 400,
       message: "Please reserve a time within business hours.",
@@ -79,19 +76,15 @@ function timeIsWithinBusinessHours(req, res, next) {
   next();
 }
 
-function _getPropsErrorMessage(missingOrInvalid, props) {
-  let message = `${missingOrInvalid} properties: `;
-  const len = props.length;
-  for (let i = 0; i < len; i++) {
-    const prop = props[i];
-    message += prop;
-    if (i < len - 1) {
-      message += ", ";
-    } else {
-      message += ".";
-    }
+async function reservationExists(req, res, next) {
+  const { reservation_id: id } = req.params;
+  const reservation = await service.read(id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  } else {
+    return next({ status: 404, message: `Reservation ID: ${id} not found.` });
   }
-  return message;
 }
 
 module.exports = {
@@ -104,4 +97,5 @@ module.exports = {
     asyncErrorBoundary(timeIsWithinBusinessHours),
     asyncErrorBoundary(create),
   ],
+  read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
 };

@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import getTimeInteger from "../common/getTimeInteger";
+import getDateInteger from "../common/getDateInteger";
+import formatReservationDate from "../utils/format-reservation-date";
 
 export default function NewReservation({ reservations, setReservations }) {
   const history = useHistory();
@@ -24,12 +27,28 @@ export default function NewReservation({ reservations, setReservations }) {
     const errorsArr = [];
     const today = new Date();
     const reservationDate = new Date(formData.reservation_date);
+    const timeNow = getTimeInteger(today);
+    const reservationTime = getTimeInteger(reservationDate);
+    const dateNow = getDateInteger(today);
+    const dateOfReservation = getDateInteger(reservationDate);
+    // const dateNow = getDateInteger(today);
+    // const dateOfReservation = getDateInteger(reservationDate);
+
     if (reservationDate.getUTCDay() === 2) {
       errorsArr.push("The restaurant is closed on Tuesdays");
     }
     if (reservationDate.getTime() < today.getTime()) {
       errorsArr.push("Date must be in the future");
     }
+
+    if (reservationTime < 930 || reservationTime > 2130) {
+      errorsArr.push("Time must be within business hours (9:30 - 21:30)");
+    }
+
+    if (dateNow === dateOfReservation && timeNow > reservationTime) {
+      errorsArr.push("Time of reservation has already passed today");
+    }
+
     return errorsArr;
   }
 
