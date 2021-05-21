@@ -38,7 +38,12 @@ export default function Routes() {
         <NewTable setCalledAPI={setCalledAPI} />
       </Route>
       <Route exact path="/reservations/:reservationId/seat">
-        <SeatParty setCalledAPI={setCalledAPI} tables={tables} />
+        <SeatParty
+          calledAPI={calledAPI}
+          setCalledAPI={setCalledAPI}
+          tables={tables}
+          setTables={setTables}
+        />
       </Route>
       <Route exact path="/reservations/new">
         <NewReservation />
