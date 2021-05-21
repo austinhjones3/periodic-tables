@@ -136,8 +136,14 @@ export default function NewReservation() {
             onChange={handleChange}
           />
         </div>
-        <button type="submit">Submit</button>
-        <button onClick={history.goBack} className="ml-1" type="button">
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+        <button
+          onClick={history.goBack}
+          className="btn btn-secondary ml-1"
+          type="button"
+        >
           Cancel
         </button>
       </form>
