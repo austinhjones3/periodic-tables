@@ -32,50 +32,63 @@ export default function Dashboard({ date }) {
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date {date}</h4>
+      <div className="row">
+        <div className="col-md-6 col-sm-12">
+          <div className="d-md-flex mb-3">
+            <h4 className="mb-0">Reservations for date {date}</h4>
+          </div>
+          <ErrorAlert error={reservationsError} />
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => history.push(`/dashboard?date=${previous(date)}`)}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary ml-1"
+            onClick={() => history.push(`/dashboard?date=${today()}`)}
+          >
+            Today
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary ml-1"
+            onClick={() => history.push(`/dashboard?date=${next(date)}`)}
+          >
+            Next
+          </button>
+          {/** flex side by side later */}
+          {reservations.map((entry) => (
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">
+                  Reservation for: {`${entry.first_name} ${entry.last_name}`}
+                </h5>
+                <p className="card-text">Number: {entry.mobile_number}</p>
+                <p className="card-text">Date: {entry.reservation_date}</p>
+                <p className="card-text">Time: {entry.reservation_time}</p>
+                <p className="card-text">Party Size: {entry.people}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="col-md-6 col-sm-12">
+          <div className="d-md-flex mb-3">
+            <h4>Tables</h4>
+          </div>
+          <ErrorAlert error={tablesError} />
+          {tables.map((entry) => (
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Table: {entry.table_name}</h5>
+                <p className="card-text">Capacity: {entry.capacity}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <ErrorAlert error={reservationsError} />
-      <button
-        type="button"
-        onClick={() => history.push(`/dashboard?date=${previous(date)}`)}
-      >
-        Previous
-      </button>
-      <button
-        type="button"
-        onClick={() => history.push(`/dashboard?date=${today()}`)}
-      >
-        Today
-      </button>
-      <button
-        type="button"
-        onClick={() => history.push(`/dashboard?date=${next(date)}`)}
-      >
-        Next
-      </button>
-      {/** flex side by side later */}
-      {reservations.map((entry) => (
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">
-              Reservation for: {`${entry.first_name} ${entry.last_name}`}
-            </h5>
-            <p className="card-text">Number: {entry.mobile_number}</p>
-            <p className="card-text">Date: {entry.reservation_date}</p>
-            <p className="card-text">Time: {entry.reservation_time}</p>
-            <p className="card-text">Party Size: {entry.people}</p>
-          </div>
-        </div>
-      ))}
-      {tables.map((entry) => (
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">Table: {entry.table_name}</h5>
-            <p className="card-text">Capacity: {entry.capacity}</p>
-          </div>
-        </div>
-      ))}
     </main>
   );
 }

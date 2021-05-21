@@ -19,16 +19,17 @@ function Routes() {
   const date = query.get("date");
   return (
     <Switch>
-      <Route exact={true} path="/">
+      <Route exact path="/">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact path="/tables/new">
         <NewTable />
       </Route>
+      <Route exact path="/reservations/:reservationId/seat"></Route>
       <Route exact path="/reservations/new">
         <NewReservation />
       </Route>
-      <Route exact={true} path="/reservations">
+      <Route exact path="/reservations">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
