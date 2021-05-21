@@ -44,7 +44,9 @@ function propsAreValid(req, res, next) {
 }
 
 function dateIsInTheFuture(req, res, next) {
-  res.locals.reservationDate = new Date(res.locals.reservation.reservation_date);
+  res.locals.reservationDate = new Date(
+    `${res.locals.reservation.reservation_date}, ${res.locals.reservation.reservation_time}`
+  );
   const today = new Date();
   if (today.getTime() > res.locals.reservationDate.getTime()) {
     return next({
