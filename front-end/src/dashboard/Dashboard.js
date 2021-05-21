@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
+import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
 
 /**
@@ -10,11 +10,9 @@ import { previous, today, next } from "../utils/date-time";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-export default function Dashboard({ date }) {
+export default function Dashboard({ date, tables, tablesError }) {
   const history = useHistory();
   const [reservations, setReservations] = useState([]);
-  const [tables, setTables] = useState([]);
-  const [tablesError, setTablesError] = useState(null);
   const [reservationsError, setReservationsError] = useState(null);
 
   useEffect(loadDashboard, [date]);
@@ -25,7 +23,6 @@ export default function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
-    listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -61,7 +58,7 @@ export default function Dashboard({ date }) {
           </button>
           {/** flex side by side later */}
           {reservations.map((entry) => (
-            <div className="card">
+            <div className="card mt-1">
               <div className="card-body">
                 <h5 className="card-title">
                   Reservation for: {`${entry.first_name} ${entry.last_name}`}
@@ -71,6 +68,12 @@ export default function Dashboard({ date }) {
                 <p className="card-text">Time: {entry.reservation_time}</p>
                 <p className="card-text">Party Size: {entry.people}</p>
               </div>
+              <Link
+                className="btn btn-primary"
+                to={`/reservations/${entry.reservation_id}/seat`}
+              >
+                Seat
+              </Link>
             </div>
           ))}
         </div>
@@ -79,11 +82,14 @@ export default function Dashboard({ date }) {
             <h4>Tables</h4>
           </div>
           <ErrorAlert error={tablesError} />
-          {tables.map((entry) => (
+          {tables.map((table) => (
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">Table: {entry.table_name}</h5>
-                <p className="card-text">Capacity: {entry.capacity}</p>
+                <h5 className="card-title">Table: {table.table_name}</h5>
+                <p className="card-text">Capacity: {table.capacity}</p>
+                <p data-table-id-status={table.table_id}>
+                  {table.reservation_id ? "Occupied" : "Free"}
+                </p>
               </div>
             </div>
           ))}

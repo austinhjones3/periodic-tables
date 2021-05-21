@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { createTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
-export default function NewTable() {
+export default function NewTable({ setCalledAPI }) {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({ table_name: "", capacity: "" });
@@ -28,7 +28,11 @@ export default function NewTable() {
     setErrors(null);
     const errorsArr = validateData();
     if (!errorsArr.length) {
-      createTable(formData).then(history.push("/dashboard")).catch(setErrors);
+      createTable(formData)
+        // force API recall and component reload
+        .then(() => setCalledAPI(() => true))
+        .then(history.push("/dashboard"))
+        .catch(setErrors);
     } else {
       const errorMessage = { message: `${errorsArr.join(", ").trim()}` };
       setErrors(errorMessage);
