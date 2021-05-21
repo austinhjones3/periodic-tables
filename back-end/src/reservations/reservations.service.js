@@ -13,10 +13,6 @@ async function create(reservation) {
 }
 
 async function read(reservation_id) {
-  // const fiftyOne = await knex("reservations")
-  //   .where({ reservation_id: "51" })
-  //   .first();
-  // console.log(fiftyOne);
   return await knex("reservations").where({ reservation_id }).first();
 }
 
