@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
@@ -13,6 +13,8 @@ import { previous, today, next } from "../utils/date-time";
 export default function Dashboard({ date }) {
   const history = useHistory();
   const [reservations, setReservations] = useState([]);
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
   const [reservationsError, setReservationsError] = useState(null);
 
   useEffect(loadDashboard, [date]);
@@ -23,6 +25,7 @@ export default function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -51,7 +54,7 @@ export default function Dashboard({ date }) {
       >
         Next
       </button>
-
+      {/** flex side by side later */}
       {reservations.map((entry) => (
         <div className="card">
           <div className="card-body">
@@ -62,6 +65,14 @@ export default function Dashboard({ date }) {
             <p className="card-text">Date: {entry.reservation_date}</p>
             <p className="card-text">Time: {entry.reservation_time}</p>
             <p className="card-text">Party Size: {entry.people}</p>
+          </div>
+        </div>
+      ))}
+      {tables.map((entry) => (
+        <div className="card">
+          <div className="card-body">
+            <h5 className="card-title">Table: {entry.table_name}</h5>
+            <p className="card-text">Capacity: {entry.capacity}</p>
           </div>
         </div>
       ))}
