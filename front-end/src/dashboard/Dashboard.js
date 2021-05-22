@@ -3,6 +3,7 @@ import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
+import FinishTable from "./FinishTable";
 
 /**
  * Defines the dashboard page.
@@ -10,7 +11,13 @@ import { previous, today, next } from "../utils/date-time";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-export default function Dashboard({ date, tables, tablesError }) {
+export default function Dashboard({
+  date,
+  tables,
+  tablesError,
+  calledAPI,
+  setCalledAPI,
+}) {
   const history = useHistory();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
@@ -56,7 +63,6 @@ export default function Dashboard({ date, tables, tablesError }) {
           >
             Next
           </button>
-          {/** flex side by side later */}
           {reservations.map((entry) => (
             <div className="card mt-1">
               <div className="card-body">
@@ -90,6 +96,13 @@ export default function Dashboard({ date, tables, tablesError }) {
                 <p data-table-id-status={table.table_id}>
                   {table.reservation_id ? "Occupied" : "Free"}
                 </p>
+                {table.reservation_id ? (
+                  <FinishTable
+                    table={table}
+                    calledAPI={calledAPI}
+                    setCalledAPI={setCalledAPI}
+                  />
+                ) : null}
               </div>
             </div>
           ))}

@@ -23,6 +23,11 @@ async function update(req, res, next) {
   res.json({ data: await service.update(res.locals.table) });
 }
 
+async function destroy(req, res, next) {
+  await service.destroy(res.locals.table.table_id);
+  res.sendStatus(200);
+}
+
 /**
  * MIDDLEWARE for /tables and /tables/:table_id
  */
@@ -33,7 +38,10 @@ async function tableExists(req, res, next) {
     res.locals.table = table;
     return next();
   } else {
-    return next({ status: 404, message: `table_id: ${table_id} does not exist` });
+    return next({
+      status: 404,
+      message: `table_id: ${table_id} does not exist`,
+    });
   }
 }
 
@@ -83,23 +91,34 @@ async function reservationIdExists(req, res, next) {
 
 async function tableIsAvailable(req, res, next) {
   const table = res.locals.table;
-  if (!table) {
-    return next({ status: 404, message: `table_id: ${table_id} does not exist` });
-  }
-  const reservation = res.locals.reservation;
   if (table.reservation_id) {
     return next({
       status: 400,
       message: "Table is currently occupied/unavailable.",
     });
   }
-  if (reservation.people > table.capacity) {
+  next();
+}
+
+async function tableIsNotAvailable(req, res, next) {
+  const table = res.locals.table;
+  if (!table.reservation_id) {
+    return next({
+      status: 400,
+      message: "Table is not occupied/cannot be finished.",
+    });
+  }
+  next();
+}
+
+async function partyFitsTable(req, res, next) {
+  if (res.locals.reservation.people > res.locals.table.capacity) {
     return next({
       status: 400,
       message: "Reservation party size is too large for table capacity.",
     });
   }
-  table.reservation_id = res.locals.reservation_id;
+  res.locals.table.reservation_id = res.locals.reservation_id;
   next();
 }
 
@@ -115,6 +134,12 @@ module.exports = {
     asyncErrorBoundary(reservationIdExists),
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(tableIsAvailable),
+    asyncErrorBoundary(partyFitsTable),
     asyncErrorBoundary(update),
+  ],
+  destroy: [
+    asyncErrorBoundary(tableExists),
+    asyncErrorBoundary(tableIsNotAvailable),
+    asyncErrorBoundary(destroy),
   ],
 };

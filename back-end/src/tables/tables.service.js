@@ -15,14 +15,20 @@ async function read(table_id) {
 }
 
 async function update(table) {
-  return await knex("tables as t")
+  return await knex("tables")
     .where({ table_id: table.table_id })
     .update(table, "*");
 }
 
+async function destroy(table_id) {
+  return await knex("tables")
+    .where({ table_id })
+    .update("reservation_id", null);
+}
 module.exports = {
   list,
   create,
   read,
   update,
+  destroy,
 };

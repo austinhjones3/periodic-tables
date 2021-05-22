@@ -56,6 +56,8 @@ export default function Routes() {
           date={date ? date : today()}
           tables={tables}
           tablesError={tablesError}
+          calledAPI={calledAPI}
+          setCalledAPI={setCalledAPI}
         />
       </Route>
       <Route>
