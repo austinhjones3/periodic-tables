@@ -3,7 +3,12 @@ import { useRouteMatch, useHistory } from "react-router-dom";
 import { readReservation, updateTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
-export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
+export default function SeatParty({
+  calledAPI,
+  setCalledAPI,
+  tables,
+  setTables,
+}) {
   const history = useHistory();
   const [reservation, setReservation] = useState(null);
   const [table, setTable] = useState(tables[0]);
@@ -24,7 +29,15 @@ export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
     event.preventDefault();
     if (reservation && validateCapacity()) {
       updateTable(table.table_id, reservationId, abortController.signal)
-        .then(() => setCalledAPI(!calledAPI))
+        .then(() => {
+          const tablesCopy = [...tables];
+          const tableToUpdate = tablesCopy.findIndex(
+            (selected) => selected.table_id === table.table_id
+          );
+          tablesCopy[tableToUpdate].reservation_id = reservationId;
+          setTables(tablesCopy);
+        })
+        // .then(() => setCalledAPI(!calledAPI))
         .then(history.push("/dashboard"))
         .catch(() => setError({ message: "Update failed." }));
     }

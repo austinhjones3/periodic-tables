@@ -14,6 +14,7 @@ import FinishTable from "./FinishTable";
 export default function Dashboard({
   date,
   tables,
+  setTables,
   tablesError,
   calledAPI,
   setCalledAPI,
@@ -94,11 +95,14 @@ export default function Dashboard({
                 <h5 className="card-title">Table: {table.table_name}</h5>
                 <p className="card-text">Capacity: {table.capacity}</p>
                 <p data-table-id-status={table.table_id}>
-                  {table.reservation_id ? "Occupied" : "Free"}
+                  Occupied
+                  {/* {table.reservation_id ? "Occupied" : "Free"} */}
                 </p>
                 {table.reservation_id ? (
                   <FinishTable
                     table={table}
+                    tables={tables}
+                    setTables={setTables}
                     calledAPI={calledAPI}
                     setCalledAPI={setCalledAPI}
                   />

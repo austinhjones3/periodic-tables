@@ -55,6 +55,7 @@ export default function Routes() {
         <Dashboard
           date={date ? date : today()}
           tables={tables}
+          setTables={setTables}
           tablesError={tablesError}
           calledAPI={calledAPI}
           setCalledAPI={setCalledAPI}
