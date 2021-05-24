@@ -94,19 +94,19 @@ export default function Dashboard({
               <div className="card-body">
                 <h5 className="card-title">Table: {table.table_name}</h5>
                 <p className="card-text">Capacity: {table.capacity}</p>
-                <p data-table-id-status={table.table_id}>
-                  {/* Occupied */}
-                  {table.reservation_id ? "Occupied" : "Free"}
+                <p data-table-id-status={`${table.table_id}`}>
+                  Status: {table.reservation_id ? "Occupied" : "Free"}
                 </p>
-                {table.reservation_id ? (
+                {table.reservation_id && (
                   <FinishTable
-                    table={table}
+                    date={date}
                     tables={tables}
                     setTables={setTables}
+                    table={table}
                     calledAPI={calledAPI}
                     setCalledAPI={setCalledAPI}
                   />
-                ) : null}
+                )}
               </div>
             </div>
           ))}

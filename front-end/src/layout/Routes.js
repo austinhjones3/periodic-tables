@@ -39,6 +39,7 @@ export default function Routes() {
       </Route>
       <Route exact path="/reservations/:reservationId/seat">
         <SeatParty
+          date={date ? date : today()}
           calledAPI={calledAPI}
           setCalledAPI={setCalledAPI}
           tables={tables}

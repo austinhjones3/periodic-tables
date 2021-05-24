@@ -4,6 +4,7 @@ import { readReservation, updateTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
 export default function SeatParty({
+  date,
   calledAPI,
   setCalledAPI,
   tables,
@@ -29,16 +30,16 @@ export default function SeatParty({
     event.preventDefault();
     if (reservation && validateCapacity()) {
       updateTable(table.table_id, reservationId, abortController.signal)
-        .then(() => {
-          const tablesCopy = [...tables];
-          const tableToUpdate = tablesCopy.findIndex(
-            (selected) => selected.table_id === table.table_id
-          );
-          tablesCopy[tableToUpdate].reservation_id = reservationId;
-          setTables(tablesCopy);
-        })
-        // .then(() => setCalledAPI(!calledAPI))
-        .then(history.push("/dashboard"))
+        // .then(() => {
+        //   const tablesCopy = [...tables];
+        //   const tableToUpdate = tablesCopy.findIndex(
+        //     (selected) => selected.table_id === table.table_id
+        //   );
+        //   tablesCopy[tableToUpdate].reservation_id = reservationId;
+        //   setTables(tablesCopy);
+        // })
+        .then(() => setCalledAPI(!calledAPI))
+        .then(history.push(`/dashboard?date=${date}`))
         .catch(() => setError({ message: "Update failed." }));
     }
   }

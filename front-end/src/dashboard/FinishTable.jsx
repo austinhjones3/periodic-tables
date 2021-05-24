@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { deletePartyFromTable, listTables } from "../utils/api";
+import { useHistory } from "react-router-dom";
+import { deletePartyFromTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
 export default function FinishTable({
-  table,
+  date,
   tables,
   setTables,
+  table,
   calledAPI,
   setCalledAPI,
 }) {
   const [error, setError] = useState(null);
+  const history = useHistory();
 
   function handleDelete() {
     const abortController = new AbortController();
@@ -17,22 +20,17 @@ export default function FinishTable({
       "Is this table ready to seat new guests? \n\nThis cannot be undone."
     );
     if (answer) {
-      // deletePartyFromTable(table.table_id, abortController.signal)
-      //   .then(() => {
-      //     const tablesCopy = [...tables];
-      //     const tableToUpdate = tablesCopy.findIndex(
-      //       (selected) => selected.table_id === table.table_id
-      //     );
-      //     tablesCopy[tableToUpdate].reservation_id = null;
-      //     setTables(tablesCopy);
-      //   })
-      //   .catch(setError);
-      // deletePartyFromTable(table.table_id, abortController.signal)
-      //   .then(() => listTables(abortController.signal))
-      //   .then(setTables)
-      //   .catch(setError);
       deletePartyFromTable(table.table_id, abortController.signal)
-        .then(() => setCalledAPI(!calledAPI))
+        .then(() => {
+          const tablesCopy = [...tables];
+          const tableToUpdate = tablesCopy.findIndex(
+            (entry) => entry.table_id === table.table_id
+          );
+          tablesCopy[tableToUpdate].reservation_id = null;
+          return tablesCopy;
+        })
+        .then(setTables)
+        // .then(() => setCalledAPI(!calledAPI))
         .catch(setError);
     }
   }
@@ -40,7 +38,7 @@ export default function FinishTable({
     <button
       className="btn btn-danger"
       onClick={handleDelete}
-      data-table-id-finish={table.table_id}
+      data-table-id-finish={`${table.table_id}`}
     >
       Finish
     </button>
