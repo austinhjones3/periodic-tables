@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  listReservations,
-  deletePartyFromTable,
-  listTables,
-} from "../utils/api";
+import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
@@ -36,29 +32,6 @@ export default function Dashboard({
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
-  }
-
-  function handleDelete({ target }) {
-    const abortController = new AbortController();
-    const answer = window.confirm(
-      "Is this table ready to seat new guests? \n\nThis cannot be undone."
-    );
-    if (answer) {
-      // deletePartyFromTable(table.table_id, abortController.signal)
-      //   .then(() => {
-      //     const tablesCopy = [...tables];
-      //     const tableToUpdate = tablesCopy.findIndex(
-      //       (selected) => selected.table_id === table.table_id
-      //     );
-      //     tablesCopy[tableToUpdate].reservation_id = null;
-      //     setTables(tablesCopy);
-      //   })
-      //   .catch(setError);
-      deletePartyFromTable(target.key, abortController.signal)
-        .then(() => listTables(abortController.signal))
-        .then(setTables)
-        .catch(console.log);
-    }
   }
 
   return (
@@ -122,18 +95,17 @@ export default function Dashboard({
                 <h5 className="card-title">Table: {table.table_name}</h5>
                 <p className="card-text">Capacity: {table.capacity}</p>
                 <p data-table-id-status={table.table_id}>
-                  Occupied
-                  {/* {table.reservation_id ? "Occupied" : "Free"} */}
+                  {/* Occupied */}
+                  {table.reservation_id ? "Occupied" : "Free"}
                 </p>
                 {table.reservation_id ? (
-                  <button
-                    className="btn btn-danger"
-                    onClick={handleDelete}
-                    data-table-id-finish={table.table_id}
-                    key={table.table_id}
-                  >
-                    Finish
-                  </button>
+                  <FinishTable
+                    table={table}
+                    tables={tables}
+                    setTables={setTables}
+                    calledAPI={calledAPI}
+                    setCalledAPI={setCalledAPI}
+                  />
                 ) : null}
               </div>
             </div>

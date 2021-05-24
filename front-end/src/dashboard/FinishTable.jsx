@@ -27,9 +27,12 @@ export default function FinishTable({
       //     setTables(tablesCopy);
       //   })
       //   .catch(setError);
+      // deletePartyFromTable(table.table_id, abortController.signal)
+      //   .then(() => listTables(abortController.signal))
+      //   .then(setTables)
+      //   .catch(setError);
       deletePartyFromTable(table.table_id, abortController.signal)
-        .then(() => listTables(abortController.signal))
-        .then(setTables)
+        .then(() => setCalledAPI(!calledAPI))
         .catch(setError);
     }
   }
