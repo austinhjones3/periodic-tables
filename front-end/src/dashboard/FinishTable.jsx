@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { deletePartyFromTable } from "../utils/api";
+import { deletePartyFromTable, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
 export default function FinishTable({
@@ -17,15 +17,19 @@ export default function FinishTable({
       "Is this table ready to seat new guests? \n\nThis cannot be undone."
     );
     if (answer) {
+      // deletePartyFromTable(table.table_id, abortController.signal)
+      //   .then(() => {
+      //     const tablesCopy = [...tables];
+      //     const tableToUpdate = tablesCopy.findIndex(
+      //       (selected) => selected.table_id === table.table_id
+      //     );
+      //     tablesCopy[tableToUpdate].reservation_id = null;
+      //     setTables(tablesCopy);
+      //   })
+      //   .catch(setError);
       deletePartyFromTable(table.table_id, abortController.signal)
-        .then(() => {
-          const tablesCopy = [...tables];
-          const tableToUpdate = tablesCopy.findIndex(
-            (selected) => selected.table_id === table.table_id
-          );
-          tablesCopy[tableToUpdate].reservation_id = null;
-          setTables(tablesCopy);
-        })
+        .then(() => listTables(abortController.signal))
+        .then(setTables)
         .catch(setError);
     }
   }

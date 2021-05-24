@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import {
+  listReservations,
+  deletePartyFromTable,
+  listTables,
+} from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
@@ -32,6 +36,29 @@ export default function Dashboard({
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
+  }
+
+  function handleDelete({ target }) {
+    const abortController = new AbortController();
+    const answer = window.confirm(
+      "Is this table ready to seat new guests? \n\nThis cannot be undone."
+    );
+    if (answer) {
+      // deletePartyFromTable(table.table_id, abortController.signal)
+      //   .then(() => {
+      //     const tablesCopy = [...tables];
+      //     const tableToUpdate = tablesCopy.findIndex(
+      //       (selected) => selected.table_id === table.table_id
+      //     );
+      //     tablesCopy[tableToUpdate].reservation_id = null;
+      //     setTables(tablesCopy);
+      //   })
+      //   .catch(setError);
+      deletePartyFromTable(target.key, abortController.signal)
+        .then(() => listTables(abortController.signal))
+        .then(setTables)
+        .catch(console.log);
+    }
   }
 
   return (
@@ -99,13 +126,14 @@ export default function Dashboard({
                   {/* {table.reservation_id ? "Occupied" : "Free"} */}
                 </p>
                 {table.reservation_id ? (
-                  <FinishTable
-                    table={table}
-                    tables={tables}
-                    setTables={setTables}
-                    calledAPI={calledAPI}
-                    setCalledAPI={setCalledAPI}
-                  />
+                  <button
+                    className="btn btn-danger"
+                    onClick={handleDelete}
+                    data-table-id-finish={table.table_id}
+                    key={table.table_id}
+                  >
+                    Finish
+                  </button>
                 ) : null}
               </div>
             </div>
