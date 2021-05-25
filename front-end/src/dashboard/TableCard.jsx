@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { deletePartyFromTable } from "../utils/api";
+import { useHistory } from "react-router-dom";
 
 export default function TableCard({ calledAPI, setCalledAPI, table }) {
   const [error, setError] = useState(null);
+  const history = useHistory();
 
   function handleFinish() {
     const abortController = new AbortController();
@@ -12,6 +14,7 @@ export default function TableCard({ calledAPI, setCalledAPI, table }) {
     if (answer) {
       deletePartyFromTable(table.table_id, abortController.signal)
         .then(() => setCalledAPI(() => !calledAPI))
+        .then(history.go(0))
         .catch(setError);
     }
   }
@@ -26,7 +29,7 @@ export default function TableCard({ calledAPI, setCalledAPI, table }) {
         </p>
         {table.reservation_id && (
           <button
-            type="button"
+            type="submit"
             className="btn btn-danger"
             onClick={handleFinish}
             data-table-id-finish={table.table_id}

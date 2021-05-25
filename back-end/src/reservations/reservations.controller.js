@@ -19,7 +19,12 @@ async function read(req, res) {
 }
 
 async function updateStatus(req, res) {
-  res.json();
+  res.status(200).json({
+    data: await service.updateStatus(
+      res.locals.reservation.reservation_id,
+      res.locals.requestedStatus
+    ),
+  });
 }
 
 /**
@@ -130,13 +135,14 @@ async function statusIsUnknown(req, res, next) {
 }
 
 async function statusPassedIsValid(req, res, next) {
-  const { status: reservationStatus } = req.body.data;
-  if (reservationStatus !== ("seated" || "finished" || "booked")) {
+  const reservationStatus = req.body.data.status;
+  if (reservationStatus !== ("seated" || "finished" || "booked" || null)) {
     return next({
       status: 400,
       message: `Reservation status: ${reservationStatus} is not acceptable. Please pass status of "booked".`,
     });
   }
+  res.locals.requestedStatus = reservationStatus;
   next();
 }
 
