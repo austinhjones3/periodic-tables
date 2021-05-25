@@ -19,7 +19,8 @@ async function read(reservation_id) {
 async function updateStatus(reservation_id, newStatus) {
   return await knex("reservations")
     .where({ reservation_id })
-    .update("status", newStatus);
+    .update("status", newStatus)
+    .then(() => read(reservation_id));
 }
 
 module.exports = {

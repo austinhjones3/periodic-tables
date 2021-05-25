@@ -1,4 +1,5 @@
 const knex = require("../db/connection");
+const reservationService = require("../reservations/reservations.service");
 
 async function list() {
   return await knex("tables").orderBy("table_name", "asc");
@@ -23,7 +24,8 @@ async function update(table) {
 async function destroy(table_id) {
   return await knex("tables")
     .where({ table_id })
-    .update("reservation_id", null);
+    .update("reservation_id", null)
+    .then(() => reservationsService.updateStatus(reservation_id, "finished"));
 }
 module.exports = {
   list,

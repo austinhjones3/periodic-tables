@@ -77,7 +77,6 @@ function dateIsNotATuesday(req, res, next) {
 }
 
 function timeIsWithinBusinessHours(req, res, next) {
-  // UNARY OPERATOR      __
   const reservationTime = +res.locals.reservation.reservation_time.replace(
     ":",
     ""
@@ -121,11 +120,7 @@ async function statusIsBooked(req, res, next) {
 
 async function statusIsUnknown(req, res, next) {
   const reservation = res.locals.reservation;
-  if (
-    reservation.status !== "booked" &&
-    reservation.status !== "finished" &&
-    reservation.status !== "seated"
-  ) {
+  if (!["booked", "finished", "seated"].includes(reservation.status)) {
     return next({
       status: 400,
       message: `Reservation status: ${reservation.status} is not acceptable. Please pass status of "booked".`,
@@ -136,7 +131,7 @@ async function statusIsUnknown(req, res, next) {
 
 async function statusPassedIsValid(req, res, next) {
   const reservationStatus = req.body.data.status;
-  if (reservationStatus !== ("seated" || "finished" || "booked" || null)) {
+  if (!["seated", "finished", "booked"].includes(reservationStatus)) {
     return next({
       status: 400,
       message: `Reservation status: ${reservationStatus} is not acceptable. Please pass status of "booked".`,
