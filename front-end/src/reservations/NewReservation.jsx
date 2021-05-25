@@ -14,7 +14,6 @@ export default function NewReservation({ calledAPI, setCalledAPI }) {
     reservation_date: "",
     reservation_time: "",
     people: "",
-    status: "booked",
   });
 
   // changes state actively as data is input by user

@@ -26,32 +26,21 @@ export default function Routes() {
   const query = useQuery();
   const dateQuery = query.get("date");
   const date = dateQuery ? dateQuery : today();
-  const abortController = new AbortController();
 
-  // useEffect(loadReservations, [date, calledAPI]);
-  // function loadReservations() {
-  //   listReservations({ date }, abortController.signal)
-  //     .then(setReservations)
-  //     .catch(setReservationsError);
-  // }
-
-  // useEffect(loadTables, [calledAPI]);
-  // function loadTables() {
-  //   listTables(abortController.signal).then(setTables).catch(setTablesError);
-  // }
-
-  useEffect(loadDashboard, [date, calledAPI]);
-  function loadDashboard() {
+  useEffect(loadReservations, [calledAPI, date]);
+  function loadReservations() {
+    const abortController = new AbortController();
     listReservations({ date }, abortController.signal)
       .then(setReservations)
+      .then(console.log(reservations))
       .catch(setReservationsError);
-    listTables(abortController.signal).then(setTables).catch(setTablesError);
   }
 
-  // useEffect(loadTables, [calledAPI]);
-  // function loadTables() {
-  //   listTables(abortController.signal).then(setTables).catch(setTablesError);
-  // }
+  useEffect(loadTables, [calledAPI]);
+  function loadTables() {
+    const abortController = new AbortController();
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
+  }
 
   return (
     <Switch>

@@ -120,7 +120,7 @@ async function statusIsBooked(req, res, next) {
 
 async function statusIsUnknown(req, res, next) {
   const reservation = res.locals.reservation;
-  if (!["booked", "finished", "seated"].includes(reservation.status)) {
+  if (!["booked", "finished", "seated", null].includes(reservation.status)) {
     return next({
       status: 400,
       message: `Reservation status: ${reservation.status} is not acceptable. Please pass status of "booked".`,

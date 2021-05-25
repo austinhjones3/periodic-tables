@@ -6,7 +6,10 @@ import ErrorAlert from "../layout/ErrorAlert";
 export default function NewTable({ date, calledAPI, setCalledAPI }) {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
-  const [formData, setFormData] = useState({ table_name: "", capacity: "" });
+  const [formData, setFormData] = useState({
+    table_name: "",
+    capacity: "",
+  });
 
   function handleChange({ target }) {
     return setFormData(() => ({ ...formData, [target.name]: target.value }));

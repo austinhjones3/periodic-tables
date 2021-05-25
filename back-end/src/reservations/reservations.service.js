@@ -8,6 +8,7 @@ async function list(reservation_date) {
 }
 
 async function create(reservation) {
+  reservation.status = "booked";
   return await knex("reservations")
     .insert(reservation, "*")
     .then((response) => response[0]);

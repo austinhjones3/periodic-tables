@@ -28,10 +28,11 @@ export default function SeatParty({
 
   async function handleSubmit(event) {
     event.preventDefault();
+    const dateCopy = date;
     if (reservation && validateCapacity()) {
       updateTable(table.table_id, reservation_id, abortController.signal)
         .then(() => setCalledAPI(!calledAPI))
-        .then(history.push(`/dashboard?date=${date}`))
+        .then(history.push(`/dashboard?date=${dateCopy}`))
         .catch(() => setError({ message: "Update failed." }));
     }
   }
