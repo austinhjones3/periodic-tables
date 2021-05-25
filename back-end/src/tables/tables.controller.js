@@ -19,12 +19,17 @@ async function read(req, res, next) {
   res.json({ data: res.locals.table });
 }
 
-async function update(req, res, next) {
-  res.json({ data: await service.update(res.locals.table) });
+async function updateReservationId(req, res, next) {
+  res.json({
+    data: await service.updateReservationId(
+      res.locals.table.table_id,
+      res.locals.reservation_id
+    ),
+  });
 }
 
 async function destroy(req, res, next) {
-  await service.destroy(res.locals.table.table_id);
+  await service.destroy(res.locals.table);
   res.sendStatus(200);
 }
 
@@ -122,6 +127,17 @@ async function partyFitsTable(req, res, next) {
   next();
 }
 
+async function reservationIsNotSeated(req, res, next) {
+  const id = res.locals.reservation.reservation_id;
+  if (res.locals.reservation.status === "seated") {
+    return next({
+      status: 400,
+      message: `Reservation ID: ${id} is already seated at another table.`,
+    });
+  }
+  next();
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -130,12 +146,13 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(tableExists), asyncErrorBoundary(read)],
-  update: [
+  updateReservationId: [
     asyncErrorBoundary(reservationIdExists),
+    asyncErrorBoundary(reservationIsNotSeated),
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(tableIsAvailable),
     asyncErrorBoundary(partyFitsTable),
-    asyncErrorBoundary(update),
+    asyncErrorBoundary(updateReservationId),
   ],
   destroy: [
     asyncErrorBoundary(tableExists),
