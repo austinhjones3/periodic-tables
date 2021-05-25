@@ -18,6 +18,10 @@ async function read(req, res) {
   res.json({ data: res.locals.reservation });
 }
 
+async function updateStatus(req, res) {
+  res.json();
+}
+
 /**
  * MIDDLEWARE
  */
@@ -59,15 +63,20 @@ function dateIsInTheFuture(req, res, next) {
 
 function dateIsNotATuesday(req, res, next) {
   if (res.locals.reservationDate.getUTCDay() === 2) {
-    return next({ status: 400, message: "The restaurant is closed on Tuesdays!" });
+    return next({
+      status: 400,
+      message: "The restaurant is closed on Tuesdays!",
+    });
   }
   next();
 }
 
 function timeIsWithinBusinessHours(req, res, next) {
   // UNARY OPERATOR      __
-  const reservationTime = +res.locals.reservation.reservation_time.replace(":", "");
-  console.log(typeof reservationTime, reservationTime);
+  const reservationTime = +res.locals.reservation.reservation_time.replace(
+    ":",
+    ""
+  );
   if (reservationTime < 1030 || reservationTime > 2130) {
     return next({
       status: 400,
@@ -88,6 +97,8 @@ async function reservationExists(req, res, next) {
   }
 }
 
+async function statusIsBooked(req, res, next) {}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -99,4 +110,8 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(updateStatus),
+  ],
 };

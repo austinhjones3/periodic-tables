@@ -31,7 +31,7 @@ export default function SeatParty({
     if (reservation && validateCapacity()) {
       updateTable(table.table_id, reservation_id, abortController.signal)
         .then(() => setCalledAPI(!calledAPI))
-        .then(history.push(`/dashboard`))
+        .then(history.push(`/dashboard?date=${date}`))
         .catch(() => setError({ message: "Update failed." }));
     }
   }

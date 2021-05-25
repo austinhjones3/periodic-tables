@@ -16,6 +16,7 @@ module.exports = class Reservation {
     reservation_date = null,
     reservation_time = null,
     people = null,
+    status = null,
   }) {
     this.first_name = first_name;
     this.last_name = last_name;
@@ -23,6 +24,7 @@ module.exports = class Reservation {
     this.reservation_date = reservation_date;
     this.reservation_time = reservation_time;
     this.people = people;
+    this.status = status;
   }
 
   /**
@@ -38,6 +40,7 @@ module.exports = class Reservation {
       "reservation_date",
       "reservation_time",
       "people",
+      "status",
     ];
   }
 
