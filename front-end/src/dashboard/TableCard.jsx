@@ -12,7 +12,7 @@ export default function TableCard({ calledAPI, setCalledAPI, table }) {
       "Is this table ready to seat new guests? \n\nThis cannot be undone."
     );
     if (answer) {
-      deletePartyFromTable(table.table_id, abortController.signal)
+      deletePartyFromTable(table.table_id)
         .then(() => setCalledAPI(() => !calledAPI))
         .then(history.go(0))
         .catch(setError);
