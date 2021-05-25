@@ -32,7 +32,6 @@ export default function Routes() {
     const abortController = new AbortController();
     listReservations({ date }, abortController.signal)
       .then(setReservations)
-      .then(console.log(reservations))
       .catch(setReservationsError);
   }
 
