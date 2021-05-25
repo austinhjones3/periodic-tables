@@ -28,17 +28,31 @@ export default function Routes() {
   const date = dateQuery ? dateQuery : today();
   const abortController = new AbortController();
 
-  useEffect(loadReservations, [date, calledAPI]);
-  function loadReservations() {
+  // useEffect(loadReservations, [date, calledAPI]);
+  // function loadReservations() {
+  //   listReservations({ date }, abortController.signal)
+  //     .then(setReservations)
+  //     .catch(setReservationsError);
+  // }
+
+  // useEffect(loadTables, [calledAPI]);
+  // function loadTables() {
+  //   listTables(abortController.signal).then(setTables).catch(setTablesError);
+  // }
+
+  useEffect(loadDashboard, [date, calledAPI]);
+  function loadDashboard() {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
-  }
-
-  useEffect(loadTables, [calledAPI]);
-  function loadTables() {
     listTables(abortController.signal).then(setTables).catch(setTablesError);
   }
+
+  // useEffect(loadTables, [calledAPI]);
+  // function loadTables() {
+  //   listTables(abortController.signal).then(setTables).catch(setTablesError);
+  // }
+
   return (
     <Switch>
       <Route exact path="/">

@@ -45,7 +45,7 @@ export default function SeatParty({
   }
 
   return (
-    <>
+    <div>
       <h2>Seat Party {reservation_id}</h2>
       <ErrorAlert error={error} />
       <form name="seat-party" onSubmit={handleSubmit}>
@@ -70,6 +70,6 @@ export default function SeatParty({
           Cancel
         </button>
       </form>
-    </>
+    </div>
   );
 }

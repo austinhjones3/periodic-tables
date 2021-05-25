@@ -39,7 +39,7 @@ export default function NewTable({ date, calledAPI, setCalledAPI }) {
   }
 
   return (
-    <>
+    <div>
       <h2>Create Table</h2>
       {errors ? <ErrorAlert error={errors} /> : null}
       <form onSubmit={handleSubmit}>
@@ -78,6 +78,6 @@ export default function NewTable({ date, calledAPI, setCalledAPI }) {
           Cancel
         </button>
       </form>
-    </>
+    </div>
   );
 }

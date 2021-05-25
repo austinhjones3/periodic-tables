@@ -65,7 +65,7 @@ export default function NewReservation({ calledAPI, setCalledAPI }) {
   }
 
   return (
-    <>
+    <div>
       <h2>Reserve A Table</h2>
       {errors ? <ErrorAlert error={errors} /> : null}
       <form name="create_reservation" onSubmit={handleSubmit}>
@@ -150,6 +150,6 @@ export default function NewReservation({ calledAPI, setCalledAPI }) {
           Cancel
         </button>
       </form>
-    </>
+    </div>
   );
 }
