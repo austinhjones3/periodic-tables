@@ -40,7 +40,6 @@ module.exports = class Reservation {
       "reservation_date",
       "reservation_time",
       "people",
-      "status",
     ];
   }
 
@@ -59,7 +58,6 @@ module.exports = class Reservation {
       this.people
     );
   }
-
   /**
    * @method allPropsAreValid()
    * @returns {Boolean}

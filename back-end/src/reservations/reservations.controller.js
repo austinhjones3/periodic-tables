@@ -97,7 +97,59 @@ async function reservationExists(req, res, next) {
   }
 }
 
-async function statusIsBooked(req, res, next) {}
+async function statusIsBooked(req, res, next) {
+  const reservation = res.locals.reservation;
+  if (reservation.status === "seated") {
+    return next({
+      status: 400,
+      message: "Reservation status cannot be seated",
+    });
+  }
+  if (reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: "Reservation status cannot be finished",
+    });
+  }
+  next();
+}
+
+async function statusIsUnknown(req, res, next) {
+  const reservation = res.locals.reservation;
+  if (
+    reservation.status !== "booked" &&
+    reservation.status !== "finished" &&
+    reservation.status !== "seated"
+  ) {
+    return next({
+      status: 400,
+      message: `Reservation status: ${reservation.status} is not acceptable. Please pass status of "booked".`,
+    });
+  }
+  next();
+}
+
+async function statusPassedIsValid(req, res, next) {
+  const { status: reservationStatus } = req.body.data;
+  if (reservationStatus !== ("seated" || "finished" || "booked")) {
+    return next({
+      status: 400,
+      message: `Reservation status: ${reservationStatus} is not acceptable. Please pass status of "booked".`,
+    });
+  }
+  next();
+}
+
+async function currentStatusIsNotFinished(req, res, next) {
+  const { status: reservationStatus } = res.locals.reservation;
+  if (reservationStatus === "finished") {
+    return next({
+      status: 400,
+      message: `A reservation with "finished" status cannot be updated.`,
+    });
+  }
+  next();
+}
 
 module.exports = {
   list: asyncErrorBoundary(list),
@@ -107,11 +159,15 @@ module.exports = {
     asyncErrorBoundary(dateIsInTheFuture),
     asyncErrorBoundary(dateIsNotATuesday),
     asyncErrorBoundary(timeIsWithinBusinessHours),
+    asyncErrorBoundary(statusIsBooked),
+    asyncErrorBoundary(statusIsUnknown),
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
   updateStatus: [
     asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(currentStatusIsNotFinished),
+    asyncErrorBoundary(statusPassedIsValid),
     asyncErrorBoundary(updateStatus),
   ],
 };
