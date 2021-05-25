@@ -14,6 +14,7 @@ export default function NewReservation({ calledAPI, setCalledAPI }) {
     reservation_date: "",
     reservation_time: "",
     people: "",
+    status: "booked",
   });
 
   // changes state actively as data is input by user
@@ -65,7 +66,7 @@ export default function NewReservation({ calledAPI, setCalledAPI }) {
   }
 
   return (
-    <>
+    <div>
       <h2>Reserve A Table</h2>
       {errors ? <ErrorAlert error={errors} /> : null}
       <form name="create_reservation" onSubmit={handleSubmit}>
@@ -150,6 +151,6 @@ export default function NewReservation({ calledAPI, setCalledAPI }) {
           Cancel
         </button>
       </form>
-    </>
+    </div>
   );
 }

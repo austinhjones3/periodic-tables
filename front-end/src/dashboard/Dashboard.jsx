@@ -79,15 +79,19 @@ export default function Dashboard({
             <h4>Tables</h4>
           </div>
           <ErrorAlert error={tablesError} />
-          {tables.map((table) => (
-            <TableCard
-              table={table}
-              calledAPI={calledAPI}
-              setCalledAPI={setCalledAPI}
-              tables={tables}
-              setTables={setTables}
-            />
-          ))}
+          {tables ? (
+            tables.map((table) => (
+              <TableCard
+                table={table}
+                calledAPI={calledAPI}
+                setCalledAPI={setCalledAPI}
+                tables={tables}
+                setTables={setTables}
+              />
+            ))
+          ) : (
+            <h1>No Tables</h1>
+          )}
         </div>
       </div>
     </main>
