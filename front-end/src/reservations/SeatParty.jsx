@@ -16,12 +16,12 @@ export default function SeatParty({
   const [error, setError] = useState(null);
   const abortController = new AbortController();
   const {
-    params: { reservationId },
+    params: { reservation_id },
   } = useRouteMatch();
 
   useEffect(loadReservation, []);
   function loadReservation() {
-    return readReservation(reservationId, abortController.signal)
+    readReservation(reservation_id, abortController.signal)
       .then(setReservation)
       .catch(() => setError({ message: "The reservation was not found" }));
   }
@@ -29,17 +29,9 @@ export default function SeatParty({
   async function handleSubmit(event) {
     event.preventDefault();
     if (reservation && validateCapacity()) {
-      updateTable(table.table_id, reservationId, abortController.signal)
-        // .then(() => {
-        //   const tablesCopy = [...tables];
-        //   const tableToUpdate = tablesCopy.findIndex(
-        //     (selected) => selected.table_id === table.table_id
-        //   );
-        //   tablesCopy[tableToUpdate].reservation_id = reservationId;
-        //   setTables(tablesCopy);
-        // })
+      updateTable(table.table_id, reservation_id, abortController.signal)
         .then(() => setCalledAPI(!calledAPI))
-        .then(history.push(`/dashboard?date=${date}`))
+        .then(history.push(`/dashboard`))
         .catch(() => setError({ message: "Update failed." }));
     }
   }
@@ -54,7 +46,7 @@ export default function SeatParty({
 
   return (
     <>
-      <h2>Seat Party {reservationId}</h2>
+      <h2>Seat Party {reservation_id}</h2>
       <ErrorAlert error={error} />
       <form name="seat-party" onSubmit={handleSubmit}>
         <div className="form-group">
@@ -70,7 +62,11 @@ export default function SeatParty({
         <button className="btn btn-primary" type="submit">
           Submit
         </button>
-        <button className="btn btn-secondary ml-1" onClick={history.getBack}>
+        <button
+          className="btn btn-secondary ml-1"
+          onClick={history.goBack}
+          type="button"
+        >
           Cancel
         </button>
       </form>

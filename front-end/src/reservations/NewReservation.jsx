@@ -4,7 +4,7 @@ import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { getDateInt, getTimeInt } from "../utils/timeIntegers";
 
-export default function NewReservation() {
+export default function NewReservation({ calledAPI, setCalledAPI }) {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
@@ -53,7 +53,10 @@ export default function NewReservation() {
     const errorsArr = getDateErrors();
     if (!errorsArr.length) {
       createReservation(formData)
-        .then(() => history.push(`/dashboard?date=${formData.reservation_date}`))
+        .then(() => setCalledAPI(!calledAPI))
+        .then(() =>
+          history.push(`/dashboard?date=${formData.reservation_date}`)
+        )
         .catch(setErrors);
     } else {
       const errorMessage = { message: `${errorsArr.join(", ").trim()}` };

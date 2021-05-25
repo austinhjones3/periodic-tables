@@ -3,8 +3,7 @@ import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
-import FinishTable from "./FinishTable";
-
+import TableCard from "./TableCard";
 /**
  * Defines the dashboard page.
  * @param date
@@ -14,25 +13,16 @@ import FinishTable from "./FinishTable";
 export default function Dashboard({
   date,
   tables,
+  reservations,
+  setReservations,
+  reservationsError,
+  setReservationsError,
   setTables,
   tablesError,
   calledAPI,
   setCalledAPI,
 }) {
   const history = useHistory();
-  const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
-
-  useEffect(loadDashboard, [date]);
-
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
-  }
 
   return (
     <main>
@@ -90,25 +80,13 @@ export default function Dashboard({
           </div>
           <ErrorAlert error={tablesError} />
           {tables.map((table) => (
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Table: {table.table_name}</h5>
-                <p className="card-text">Capacity: {table.capacity}</p>
-                <p data-table-id-status={`${table.table_id}`}>
-                  Status: {table.reservation_id ? "Occupied" : "Free"}
-                </p>
-                {table.reservation_id && (
-                  <FinishTable
-                    date={date}
-                    tables={tables}
-                    setTables={setTables}
-                    table={table}
-                    calledAPI={calledAPI}
-                    setCalledAPI={setCalledAPI}
-                  />
-                )}
-              </div>
-            </div>
+            <TableCard
+              table={table}
+              calledAPI={calledAPI}
+              setCalledAPI={setCalledAPI}
+              tables={tables}
+              setTables={setTables}
+            />
           ))}
         </div>
       </div>
