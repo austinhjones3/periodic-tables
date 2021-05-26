@@ -1,10 +1,19 @@
 const knex = require("../db/connection");
 
-async function list(reservation_date) {
+async function listByDate(reservation_date) {
   return await knex("reservations")
     .where({ reservation_date })
     .whereNot({ status: "finished" })
     .orderBy("reservation_time", "asc");
+}
+
+async function listByNumber(mobile_number) {
+  return await knex("reservations")
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_date");
 }
 
 async function create(reservation) {
@@ -26,7 +35,8 @@ async function updateStatus(reservation_id, newStatus) {
 }
 
 module.exports = {
-  list,
+  listByDate,
+  listByNumber,
   create,
   read,
   updateStatus,

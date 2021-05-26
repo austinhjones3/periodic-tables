@@ -7,7 +7,11 @@ const { getPropsErrorMessage } = require("../common");
  * CRUD
  */
 async function list(req, res) {
-  res.json({ data: await service.list(req.query.date) });
+  if (req.query.mobile_number) {
+    res.json({ data: await service.listByNumber(req.query.mobile_number) });
+  } else {
+    res.json({ data: await service.listByDate(req.query.date) });
+  }
 }
 
 async function create(req, res) {
