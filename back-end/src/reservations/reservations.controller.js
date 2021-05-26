@@ -22,6 +22,17 @@ async function read(req, res) {
   res.json({ data: res.locals.reservation });
 }
 
+async function updateReservation(req, res) {
+  res
+    .status(200)
+    .json({
+      data: await service.updateReservation(
+        res.locals.reservationId,
+        res.locals.reservation
+      ),
+    });
+}
+
 async function updateStatus(req, res) {
   res.status(200).json({
     data: await service.updateStatus(
@@ -98,6 +109,7 @@ async function reservationExists(req, res, next) {
   const { reservation_id: id } = req.params;
   const reservation = await service.read(id);
   if (reservation) {
+    res.locals.reservationId = reservation.reservation_id;
     res.locals.reservation = reservation;
     return next();
   } else {
@@ -169,6 +181,17 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
+  updateReservation: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(hasRequiredProperties),
+    asyncErrorBoundary(propsAreValid),
+    asyncErrorBoundary(dateIsInTheFuture),
+    asyncErrorBoundary(dateIsNotATuesday),
+    asyncErrorBoundary(timeIsWithinBusinessHours),
+    asyncErrorBoundary(statusIsBooked),
+    asyncErrorBoundary(statusIsUnknown),
+    asyncErrorBoundary(updateReservation),
+  ],
   updateStatus: [
     asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(currentStatusIsNotFinished),

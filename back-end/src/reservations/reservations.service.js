@@ -27,6 +27,13 @@ async function read(reservation_id) {
   return await knex("reservations").where({ reservation_id }).first();
 }
 
+async function updateReservation(reservation_id, reservation) {
+  return await knex("reservations")
+    .where({ reservation_id })
+    .update(reservation)
+    .then(() => reservation);
+}
+
 async function updateStatus(reservation_id, newStatus) {
   return await knex("reservations")
     .where({ reservation_id })
@@ -39,5 +46,6 @@ module.exports = {
   listByNumber,
   create,
   read,
+  updateReservation,
   updateStatus,
 };

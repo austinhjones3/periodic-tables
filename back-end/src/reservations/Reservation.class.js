@@ -16,7 +16,7 @@ module.exports = class Reservation {
     reservation_date = null,
     reservation_time = null,
     people = null,
-    status = null,
+    status = "booked",
   }) {
     this.first_name = first_name;
     this.last_name = last_name;
@@ -83,7 +83,7 @@ module.exports = class Reservation {
     return {
       first_name: /.*/,
       last_name: /.*/,
-      mobile_number: /(\d{3}[-])?\d{3}[-]\d{4}/,
+      mobile_number: /(\d{3}([-])?)?\d{3}([-])?\d{4}/,
       reservation_time: /([2][0-3])|([0-1][0-9])[:][0-5][0-9]/,
       reservation_date: /\d{4}[-]\d{2}[-]\d{2}/,
       people: /\d{1,3}/,
