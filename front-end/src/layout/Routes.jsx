@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import NewReservation from "../reservations/NewReservation";
-import NewTable from "../tables/NewTable";
-import SeatParty from "../reservations/SeatParty";
+import NewReservation from "../dashboard/reservations/NewReservation";
+import NewTable from "../dashboard/tables/NewTable";
+import SeatParty from "../dashboard/reservations/SeatParty";
 import { listTables, listReservations } from "../utils/api";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createTable } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import { createTable } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
 
 export default function NewTable({ date, calledAPI, setCalledAPI }) {
   const history = useHistory();

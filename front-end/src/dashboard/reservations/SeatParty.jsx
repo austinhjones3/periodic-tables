@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
-import { readReservation, updateTable } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import { readReservation, updateTable } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
 
 export default function SeatParty({
   date,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { deletePartyFromTable } from "../utils/api";
+import { deletePartyFromTable } from "../../utils/api";
 
 export default function TableCard({ calledAPI, setCalledAPI, table }) {
   const [error, setError] = useState(null);

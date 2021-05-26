@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createReservation } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
-import { getDateInt, getTimeInt } from "../utils/timeIntegers";
+import { createReservation } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
+import { getDateInt, getTimeInt } from "../../utils/timeIntegers";
 
 export default function NewReservation({ calledAPI, setCalledAPI }) {
   const history = useHistory();

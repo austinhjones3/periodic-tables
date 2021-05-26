@@ -124,6 +124,8 @@ export async function updateTable(table_id, reservation_id, signal) {
   );
 }
 
+export async function updateReservationStatus() {}
+
 export async function deletePartyFromTable(table_id, signal) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   return await fetch(url, { headers, method: "DELETE", signal }, []);
