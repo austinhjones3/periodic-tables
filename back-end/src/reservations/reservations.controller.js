@@ -23,14 +23,12 @@ async function read(req, res) {
 }
 
 async function updateReservation(req, res) {
-  res
-    .status(200)
-    .json({
-      data: await service.updateReservation(
-        res.locals.reservationId,
-        res.locals.reservation
-      ),
-    });
+  res.status(200).json({
+    data: await service.updateReservation(
+      res.locals.reservationId,
+      res.locals.reservation
+    ),
+  });
 }
 
 async function updateStatus(req, res) {
@@ -147,7 +145,9 @@ async function statusIsUnknown(req, res, next) {
 
 async function statusPassedIsValid(req, res, next) {
   const reservationStatus = req.body.data.status;
-  if (!["seated", "finished", "booked"].includes(reservationStatus)) {
+  if (
+    !["seated", "finished", "booked", "cancelled"].includes(reservationStatus)
+  ) {
     return next({
       status: 400,
       message: `Reservation status: ${reservationStatus} is not acceptable. Please pass status of "booked".`,
