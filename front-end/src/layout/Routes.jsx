@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import NewReservation from "../dashboard/reservations/NewReservation";
 import NewTable from "../dashboard/tables/NewTable";
 import SeatParty from "../dashboard/reservations/SeatParty";
+import SearchMobileNumber from "../dashboard/reservations/SearchMobileNumber";
 import { listTables, listReservations } from "../utils/api";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
@@ -69,6 +70,13 @@ export default function Routes() {
       </Route>
       <Route exact path="/reservations">
         <Redirect to={"/dashboard"} />
+      </Route>
+      <Route exact path="/search">
+        <SearchMobileNumber
+          reservations={reservations}
+          setReservations={setReservations}
+          setReservationsError={setReservationsError}
+        />
       </Route>
       <Route path="/dashboard">
         <Dashboard
