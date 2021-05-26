@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import NewReservation from "../dashboard/reservations/NewReservation";
+import AddEditReservation from "../dashboard/reservations/AddEditReservation";
 import NewTable from "../dashboard/tables/NewTable";
 import SeatParty from "../dashboard/reservations/SeatParty";
 import SearchMobileNumber from "../dashboard/reservations/SearchMobileNumber";
@@ -54,6 +54,9 @@ export default function Routes() {
           setCalledAPI={setCalledAPI}
         />
       </Route>
+      <Route exact path="/reservations/:reservation_id/edit">
+        <AddEditReservation calledAPI={calledAPI} setCalledAPI={setCalledAPI} />
+      </Route>
       <Route exact path="/reservations/:reservation_id/seat">
         <SeatParty
           date={date}
@@ -66,7 +69,7 @@ export default function Routes() {
         />
       </Route>
       <Route exact path="/reservations/new">
-        <NewReservation calledAPI={calledAPI} setCalledAPI={setCalledAPI} />
+        <AddEditReservation calledAPI={calledAPI} setCalledAPI={setCalledAPI} />
       </Route>
       <Route exact path="/reservations">
         <Redirect to={"/dashboard"} />
