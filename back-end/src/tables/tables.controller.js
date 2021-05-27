@@ -55,12 +55,18 @@ function hasAllTableProperties(req, res, next) {
   if (!data) return next({ status: 400, message: "No data to create." });
   const table = new Table(data.table_name, data.capacity);
   if (table.hasAllProps()) {
+    // need to rework this into the class... this is the reason why
+    // front end user story 5 was failing................
+    if (data.reservation_id) {
+      table.reservation_id = data.reservation_id;
+    }
     res.locals.table = table;
     return next();
   }
   const message = getPropsErrorMessage("Missing", table.missingProps);
   return next({ status: 400, message });
 }
+
 function tableNameIsLongEnough(req, res, next) {
   if (res.locals.table.table_name.length > 1) next();
   else next({ status: 400, message: "table_name is too short" });

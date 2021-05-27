@@ -1,9 +1,25 @@
 import React, { useState } from "react";
-import { deletePartyFromTable } from "../../utils/api";
+import { deletePartyFromTable, listTables } from "../../utils/api";
 
-export default function TableCard({ calledAPI, setCalledAPI, table }) {
+export default function TableCard({
+  setTables,
+  calledAPI,
+  setCalledAPI,
+  table,
+}) {
   const [error, setError] = useState(null);
 
+  // function handleFinish() {
+  //   const abortController = new AbortController();
+  //   const answer = window.confirm(
+  //     "Is this table ready to seat new guests? \n\nThis cannot be undone."
+  //   );
+  //   if (answer) {
+  //     deletePartyFromTable(table.table_id, abortController.signal)
+  //       .then(() => setCalledAPI(() => !calledAPI))
+  //       .catch(setError);
+  //   }
+  // }
   function handleFinish() {
     const abortController = new AbortController();
     const answer = window.confirm(
@@ -11,11 +27,10 @@ export default function TableCard({ calledAPI, setCalledAPI, table }) {
     );
     if (answer) {
       deletePartyFromTable(table.table_id, abortController.signal)
-        .then(() => setCalledAPI(() => !calledAPI))
-        .catch(setError);
+        .then(() => setCalledAPI(!calledAPI))
+        .then(() => listTables().then(setTables).catch(console.log));
     }
   }
-
   return (
     <div className="card" key={table.table_id}>
       <div className="card-body">
