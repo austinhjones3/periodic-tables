@@ -5,9 +5,10 @@
  * @param {Number} capacity
  */
 module.exports = class Table {
-  constructor(table_name = null, capacity = null) {
+  constructor({ table_name = null, capacity = null, reservation_id = null }) {
     this.table_name = table_name;
     this.capacity = capacity;
+    this.reservation_id = reservation_id;
   }
 
   /**
@@ -16,6 +17,7 @@ module.exports = class Table {
    * The list of property names to be used in other methods.
    */
   get propNames() {
+    // it's ok for reservation_id to be missing because db defaults it to null
     return ["table_name", "capacity"];
   }
 

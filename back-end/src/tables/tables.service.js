@@ -22,7 +22,7 @@ async function updateReservationId(table_id, reservation_id) {
     .then(() => reservationsService.updateStatus(reservation_id, "seated"));
 }
 
-async function destroy(table) {
+async function destroyReservationId(table) {
   return await knex("tables")
     .where({ table_id: table.table_id })
     .update("reservation_id", null)
@@ -30,10 +30,11 @@ async function destroy(table) {
       reservationsService.updateStatus(table.reservation_id, "finished")
     );
 }
+
 module.exports = {
   list,
   create,
   read,
   updateReservationId,
-  destroy,
+  destroyReservationId,
 };

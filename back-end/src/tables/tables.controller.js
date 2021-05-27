@@ -28,8 +28,8 @@ async function updateReservationId(req, res, next) {
   });
 }
 
-async function destroy(req, res, next) {
-  await service.destroy(res.locals.table);
+async function destroyReservationId(req, res, next) {
+  await service.destroyReservationId(res.locals.table);
   res.sendStatus(200);
 }
 
@@ -53,13 +53,8 @@ async function tableExists(req, res, next) {
 function hasAllTableProperties(req, res, next) {
   const { data } = req.body;
   if (!data) return next({ status: 400, message: "No data to create." });
-  const table = new Table(data.table_name, data.capacity);
+  const table = new Table(data);
   if (table.hasAllProps()) {
-    // need to rework this into the class... this is the reason why
-    // front end user story 5 was failing................
-    if (data.reservation_id) {
-      table.reservation_id = data.reservation_id;
-    }
     res.locals.table = table;
     return next();
   }
@@ -160,9 +155,9 @@ module.exports = {
     asyncErrorBoundary(partyFitsTable),
     asyncErrorBoundary(updateReservationId),
   ],
-  destroy: [
+  destroyReservationId: [
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(tableIsNotAvailable),
-    asyncErrorBoundary(destroy),
+    asyncErrorBoundary(destroyReservationId),
   ],
 };
