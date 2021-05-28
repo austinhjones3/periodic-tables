@@ -59,12 +59,14 @@ function hasAllTableProperties(req, res, next) {
     return next();
   }
   const message = getPropsErrorMessage("Missing", table.missingProps);
-  return next({ status: 400, message });
+  next({ status: 400, message });
 }
 
 function tableNameIsLongEnough(req, res, next) {
-  if (res.locals.table.table_name.length > 1) next();
-  else next({ status: 400, message: "table_name is too short" });
+  if (res.locals.table.table_name.length < 2) {
+    return next({ status: 400, message: "table_name is too short" });
+  }
+  next();
 }
 
 /**

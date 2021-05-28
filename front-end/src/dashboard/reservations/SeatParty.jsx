@@ -3,13 +3,7 @@ import { useRouteMatch, useHistory } from "react-router-dom";
 import { readReservation, updateTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 
-export default function SeatParty({
-  date,
-  calledAPI,
-  setCalledAPI,
-  tables,
-  setTables,
-}) {
+export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
   const history = useHistory();
   const [reservation, setReservation] = useState(null);
   const [table, setTable] = useState(tables[0]);
