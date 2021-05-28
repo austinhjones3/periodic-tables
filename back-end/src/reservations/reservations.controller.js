@@ -150,7 +150,7 @@ async function statusPassedIsValid(req, res, next) {
   ) {
     return next({
       status: 400,
-      message: `Reservation status: ${reservationStatus} is not acceptable. Please pass status of "booked".`,
+      message: `Reservation status: ${reservationStatus} is not acceptable. Please pass status of booked, seated, finished, or cancelled.`,
     });
   }
   res.locals.requestedStatus = reservationStatus;
