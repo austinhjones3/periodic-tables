@@ -300,3 +300,96 @@ After the table is submitting, the React application will go back to the dashboa
 ### After
 
 ![New Table Submitted](./production-screenshots/new-table-submitted.png)
+
+<br>
+
+## `/reservations/:reservation_id/seat`
+
+<hr>
+
+If a reservation is booked, and a table has no party at it currently, the user can seat a reservation party at a table. Also, on the dashboard page, a user is able to "finish" a table. At this point, the table's reservation status is cleared, and the reservation is determined to be "finished".
+
+### Before Seat Button is Clicked
+
+![Before Seat](./production-screenshots/before-seat-button.png)
+
+### Seat Form
+
+![Seat Form](./production-screenshots/seat-table.png)
+
+### Dr. Strange is Seated at Table #1
+
+![Dr. Strange Seated](./production-screenshots/dr-strange-seated.png)
+
+### Dr. Strange is Finished Eating, So the Table can be Cleared
+
+![Strange Finished](./production-screenshots/dr-strange-finished.png)
+
+### Dr. Strange's Reservation is Removed from Dashboard
+
+![Reservation Is Done](./production-screenshots/dr-strange-reservation-cleared.png)
+
+<br>
+
+## `/search`
+
+<hr>
+
+The Search component will allow the user to search for reservations by customer phone number. Partial matches are acceptable, and the API will return reservations for such matches. If no results are found, the page displays "No reservations found".
+
+### Search Matches Reservation Number
+
+![Search Match](./production-screenshots/search-matches-reservation-number.png)
+
+### No results
+
+![No Matches](./production-screenshots/no-reservations-found-when-no-numbers-match.png)
+
+<br>
+
+# Technologies Used
+
+The PERN stack was used to build this application. The PERN stack includes, but is not limited to: PostgreSQL, Express.js, React.js, Node.js. Twitter Bootstrap 4.5.2 is also used on the frontend.
+
+ElephantSQL PostgreSQL instances are used to store the data. Node.js in conjuction with Knex.js are used to update and interface with the data instances. Express.js version 4 is being used to handle the routing between the requests and the responses.
+
+Facebook React.js is used on the frontend to create a responsive, dynamic web application for the user. I am using functional, hook-based React as opposed to its object-oriented counterpart. Throughout the frontend application, many hooks are used to simplify flow and layout of the application. There is plenty of React + ES6 + Bootstrap magic happening.
+
+<br>
+
+# Installation Instructions
+
+In order to effectively install and use this application locally, you will need to either clone the repo from this [GitHub](https://github.com/austinhjones3/periodic-tables) or download the zip. You will then need to navigate to the top level of the project in your bash terminal and:
+
+1. run `npm i`
+2. `cd front-end && npm i`
+3. `cd ../back-end && npm i`
+
+Now that you have all of the scripts installed, you will need two different PostgreSQL database instances to either run the application locally or test it.
+
+You must make a `.env` file in both the front-end and back-end directories.
+
+Load the back-end `.env` file with two environment variables with the values of your two database URLs like so:
+
+```
+DATABASE_URL_DEVELOPMENT=development-data-base-url-goes-here
+DATABASE_URL_TEST=test-data-base-url-goes-here
+```
+
+In the front-end `.env` file, enter:
+
+```
+REACT_APP_API_BASE_URL=http://localhost:5000
+```
+
+Now you will need to migrate the tables to the development database. Don't bother doing it for the test database, though. The tests are carrying that out for you each time. From the back-end folder:
+
+1. `npx knex migrate:latest`
+2. `npx knex seed:run`
+
+Now you are ready to run the server locally. From the top level of the project, run `npm run start:dev` if you would like to run the server and application.
+
+If you would like to test the application, you can view the `package.json` files and use the testing scripts provided there. Unfortunately, some of the provided testing scripts do not function. However, the ones that certainly do are:
+
+1. all of those that are structured like `test:5:backend` or `test:3:frontend`
+2. `test:frontend` and `test:backend`
