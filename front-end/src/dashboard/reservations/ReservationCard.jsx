@@ -23,22 +23,41 @@ export default function ReservationCard({
     }
   }
 
+  function upperCaseStatus() {
+    return (
+      reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)
+    );
+  }
+
+  function getStatusStyle() {
+    const style = { color: "" };
+    if (reservation.status === "booked") {
+      style.color = "green";
+    }
+    if (reservation.status === "seated") {
+      style.color = "orange";
+    }
+    return style;
+  }
+
   return (
     <div className="card mt-1">
       <div className="card-body">
         <h5 className="card-title">
-          Reservation for:{" "}
-          {`${reservation.first_name} ${reservation.last_name}`}
+          Name: {`${reservation.first_name} ${reservation.last_name}`}
         </h5>
         <p className="card-text">Number: {reservation.mobile_number}</p>
         <p className="card-text">Date: {reservation.reservation_date}</p>
         <p className="card-text">Time: {reservation.reservation_time}</p>
         <p className="card-text">Party Size: {reservation.people}</p>
-        <p
-          data-reservation-id-status={reservation.reservation_id}
-          className="card-text"
-        >
-          Status: {reservation.status}
+        <p className="card-text">
+          Status:{" "}
+          <span
+            data-reservation-id-status={reservation.reservation_id}
+            style={getStatusStyle()}
+          >
+            {upperCaseStatus()}
+          </span>
         </p>
       </div>
       {reservation.status === "booked" && (
