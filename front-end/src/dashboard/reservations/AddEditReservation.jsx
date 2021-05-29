@@ -12,7 +12,6 @@ import { getDateInt, getTimeInt } from "../../utils/timeIntegers";
 export default function AddEditReservation({ calledAPI, setCalledAPI }) {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
-
   const [formData, setFormData] = useState({});
   const [reservation, setReservation] = useState({});
   const {
