@@ -391,5 +391,5 @@ Now you are ready to run the server locally. From the top level of the project, 
 
 If you would like to test the application, you can view the `package.json` files and use the testing scripts provided there. Unfortunately, some of the provided testing scripts do not function. However, the ones that certainly do are:
 
-1. all of those that are structures like `test:5:backend` or `test:3:frontend`
+1. all of those that are structured like `test:5:backend` or `test:3:frontend`
 2. `test:frontend` and `test:backend`
