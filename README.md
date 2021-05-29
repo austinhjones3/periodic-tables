@@ -242,3 +242,61 @@ data: {
     status: "finished"
 }
 ```
+
+<br>
+
+# React Application
+
+The react application for this project has three forms, one main dashboard page, and a search-by-phone page. Below, their URL's and functionality are displayed and defined.
+
+## `/dashboard`
+
+<hr>
+
+By default, the /dashboard route displays all tables and the reservations that are schedules for the current date. If a reservation has been completed or canceled, it will not be displayed.
+
+![Dashboard Screenshot](./production-screenshots/reservations-for-date.png)
+
+<br>
+
+## `/dashboard?date=YYYY-MM-DD`
+
+<hr>
+
+When /dashboard is given a date query, and the date is in the provided format, the reservations for that date are displayed. No information about the tables will change based on the date query.
+
+<br>
+
+## `/reservations/new`
+
+<hr>
+
+This route displays a form that allows the user to create a new reservation.
+
+After the reservation is submitted, the React application will go back to the dashboard and display the reservations belonging to the date of the newly created reservation.
+
+### Before
+
+![New Reservation Screenshot](./production-screenshots/new-reservation.png)
+
+### After
+
+![New ReservationSubmission Screenshot](./production-screenshots/new-reservation-submitted.png)
+
+<br>
+
+## `/tables/new`
+
+<hr>
+
+Here, a form that allows the user to create a new table in the system displays.
+
+After the table is submitting, the React application will go back to the dashboard for the most recent date that was accessed before the form was used. For instance, if the last date accessed was 2022-06-01, after the table is created, the dashboard will push to that date. The new table will be displayed in the list of tables.
+
+### Before
+
+![New Table](./production-screenshots/new-table.png)
+
+### After
+
+![New Table Submitted](./production-screenshots/new-table-submitted.png)

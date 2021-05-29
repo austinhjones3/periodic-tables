@@ -80,7 +80,7 @@ function dateIsInTheFuture(req, res, next) {
 }
 
 function dateIsNotATuesday(req, res, next) {
-  if (res.locals.reservationDate.getUTCDay() === 2) {
+  if (res.locals.reservationDate.getDay() === 2) {
     return next({
       status: 400,
       message: "The restaurant is closed on Tuesdays!",

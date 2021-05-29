@@ -86,7 +86,7 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
     const dateNowInt = getDateInt(today);
     const resDateInt = getDateInt(reservationDate);
 
-    if (reservationDate.getUTCDay() === 2) {
+    if (reservationDate.getDay() === 2) {
       errorsArr.push("The restaurant is closed on Tuesdays");
     }
     if (resDateInt < dateNowInt) {
