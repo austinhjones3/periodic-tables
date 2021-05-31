@@ -74,7 +74,7 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
     setFormData(() => ({ ...formData, [target.name]: target.value }));
   }
 
-  function getDateErrors() {
+  function getErrors() {
     const errorsArr = [];
     const today = new Date();
     const reservationDate = new Date(
@@ -86,16 +86,19 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
     const resDateInt = getDateInt(reservationDate);
 
     if (reservationDate.getDay() === 2) {
-      errorsArr.push("The restaurant is closed on Tuesdays");
+      errorsArr.push("the restaurant is closed on Tuesdays");
     }
     if (resDateInt < dateNowInt) {
-      errorsArr.push("Date must be in the future");
+      errorsArr.push("date must be in the future");
     }
     if (resTimeInt < 1030 || resTimeInt > 2130) {
-      errorsArr.push("Time must be within business hours (10:30 - 21:30)");
+      errorsArr.push("time must be within business hours (10:30 - 21:30)");
     }
     if (dateNowInt === resDateInt && timeNowInt > resTimeInt) {
-      errorsArr.push("Time of reservation has already passed today");
+      errorsArr.push("time of reservation has already passed today");
+    }
+    if (+formData.people < 1) {
+      errorsArr.push("reservation must be for at least one person");
     }
     return errorsArr;
   }
@@ -103,7 +106,7 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
   function handleSubmit(event) {
     event.preventDefault();
     setErrors(null);
-    const errorsArr = getDateErrors();
+    const errorsArr = getErrors();
     if (!errorsArr.length) {
       if (reservation_id) {
         updateReservationDetails(formData, reservation_id)
@@ -121,15 +124,14 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
           .catch(setErrors);
       }
     } else {
-      const errorMessage = { message: `${errorsArr.join(", ").trim()}` };
-      setErrors(errorMessage);
+      setErrors(new Error(`${errorsArr.join(", ").trim()}`));
     }
   }
 
   return (
     <div>
       <h2>Reserve A Table</h2>
-      {errors ? <ErrorAlert error={errors} /> : null}
+      <ErrorAlert error={errors} />
       <form name="create_reservation" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="first_name">First Name</label>
