@@ -47,7 +47,11 @@ export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
       <form name="seat-party" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="table_id">Table number:</label>
-          <select className="ml-2" onChange={handleChange} name="table_id">
+          <select
+            className="ml-2 form-control w-50"
+            onChange={handleChange}
+            name="table_id"
+          >
             {tables.map((table) => (
               <option value={table.table_id} key={table.table_id}>
                 {table.table_name} - {table.capacity}
