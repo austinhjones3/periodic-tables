@@ -1,7 +1,6 @@
 # Austin Jones' Periodic Tables Final Capstone
 
-Thank you for viewing this repo. This is my final project for Thinkful's Engineering Immersion program.
-<br>Due to problems with Vercel, this project is not yet deployed.
+Thank you for viewing this repo. This is my final project for Thinkful's Engineering Immersion program. The PERN stack is used in this application, including but not limited to: PostgreSQL, Express.js, React.js, Node.js, and Knex.js.
 <br><br>
 
 # API Documentation
