@@ -18,17 +18,20 @@ export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
   function loadReservation() {
     readReservation(reservation_id, abortController.signal)
       .then(setReservation)
-      .catch(() => setError({ message: "The reservation was not found" }));
+      .catch(setError);
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const dateCopy = date;
-    if (reservation && validateCapacity()) {
-      updateTable(table.table_id, reservation_id, abortController.signal)
-        .then(() => setCalledAPI(!calledAPI))
-        .then(history.push(`/dashboard?date=${dateCopy}`))
-        .catch(() => setError({ message: "Update failed." }));
+    if (reservation) {
+      if (validateCapacity()) {
+        updateTable(table.table_id, reservation_id, abortController.signal)
+          .then(() => setCalledAPI(!calledAPI))
+          .then(history.push(`/dashboard?date=${date}`))
+          .catch(setError);
+      } else {
+        setError(() => new Error("party is too large for this table"));
+      }
     }
   }
 

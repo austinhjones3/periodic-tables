@@ -15,7 +15,7 @@ export default function NewTable({ date, calledAPI, setCalledAPI }) {
     return setFormData(() => ({ ...formData, [target.name]: target.value }));
   }
 
-  function validateData() {
+  function getErrors() {
     const errorsArr = [];
     if (formData.table_name.length < 2) {
       errorsArr.push("table name is too short");
@@ -29,7 +29,7 @@ export default function NewTable({ date, calledAPI, setCalledAPI }) {
   function handleSubmit(event) {
     event.preventDefault();
     setErrors(null);
-    const errorsArr = validateData();
+    const errorsArr = getErrors();
     if (!errorsArr.length) {
       createTable(formData)
         .then(() => setCalledAPI(() => !calledAPI))
@@ -44,7 +44,7 @@ export default function NewTable({ date, calledAPI, setCalledAPI }) {
   return (
     <div>
       <h2>Create Table</h2>
-      {errors ? <ErrorAlert error={errors} /> : null}
+      <ErrorAlert error={errors} />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="table_name">Table Name</label>
