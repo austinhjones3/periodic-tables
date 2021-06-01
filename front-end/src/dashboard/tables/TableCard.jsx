@@ -2,11 +2,15 @@
 import React, { useState } from "react";
 import { deletePartyFromTable } from "../../utils/api";
 
-export default function TableCard({ calledAPI, setCalledAPI, table }) {
-  const [error, setError] = useState(null);
-
+export default function TableCard({
+  calledAPI,
+  setCalledAPI,
+  table,
+  setError,
+}) {
   function handleFinish() {
     const abortController = new AbortController();
+    setError(null);
     const answer = window.confirm(
       "Is this table ready to seat new guests? \n\nThis cannot be undone."
     );

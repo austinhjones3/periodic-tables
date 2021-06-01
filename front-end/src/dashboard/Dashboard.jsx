@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
@@ -14,18 +14,17 @@ export default function Dashboard({
   date,
   tables,
   reservations,
-  setReservations,
   reservationsError,
-  setReservationsError,
-  setTables,
   tablesError,
   calledAPI,
   setCalledAPI,
 }) {
   const history = useHistory();
+  const [error, setError] = useState(null);
 
   return (
     <main>
+      <ErrorAlert error={error} />
       <h1>Dashboard</h1>
       <div className="row">
         <div className="col-md-6 col-sm-12">
@@ -62,6 +61,7 @@ export default function Dashboard({
                   reservation={reservation}
                   calledAPI={calledAPI}
                   setCalledAPI={setCalledAPI}
+                  setError={setError}
                 />
               )
           )}
@@ -77,8 +77,7 @@ export default function Dashboard({
                 table={table}
                 calledAPI={calledAPI}
                 setCalledAPI={setCalledAPI}
-                tables={tables}
-                setTables={setTables}
+                setError={setError}
               />
             ))
           ) : (

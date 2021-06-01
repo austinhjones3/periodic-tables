@@ -6,20 +6,22 @@ export default function ReservationCard({
   reservation,
   calledAPI,
   setCalledAPI,
+  setError,
 }) {
   function handleCancel() {
     const abortController = new AbortController();
+    setError(null);
     const answer = window.confirm(
       "Do you want to cancel this reservation?\n\nThis cannot be undone."
     );
     if (answer) {
       updateReservationStatus(
-        Number(reservation.reservation_id),
+        +reservation.reservation_id,
         "cancelled",
         abortController.signal
       )
         .then(() => setCalledAPI(!calledAPI))
-        .catch(console.log);
+        .catch(setError);
     }
   }
 

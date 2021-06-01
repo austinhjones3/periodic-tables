@@ -46,8 +46,8 @@ async function updateStatus(req, res) {
 function hasRequiredProperties(req, res, next) {
   const { data } = req.body;
   if (!data) return next({ status: 400, message: "No data to create." });
-  const reservation = new Reservation(data);
 
+  const reservation = new Reservation(data);
   if (reservation.hasAllProps()) {
     res.locals.reservation = reservation;
     return next();
