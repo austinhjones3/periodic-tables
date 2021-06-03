@@ -117,16 +117,10 @@ async function reservationExists(req, res, next) {
 
 async function statusIsBooked(req, res, next) {
   const reservation = res.locals.reservation;
-  if (reservation.status === "seated") {
+  if (reservation.status !== "booked") {
     return next({
       status: 400,
-      message: "Reservation status cannot be seated",
-    });
-  }
-  if (reservation.status === "finished") {
-    return next({
-      status: 400,
-      message: "Reservation status cannot be finished",
+      message: `Reservation status cannot be ${reservation.status}`,
     });
   }
   next();
