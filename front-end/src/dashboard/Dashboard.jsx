@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
 import TableCard from "./tables/TableCard";
 import ReservationCard from "./reservations/ReservationCard";
@@ -22,14 +22,44 @@ export default function Dashboard({
   const history = useHistory();
   const [error, setError] = useState(null);
 
+  const reservationsMap = reservations.length ? (
+    reservations.map(
+      (reservation) =>
+        reservation.status !== "finished" &&
+        reservation.status !== "cancelled" && (
+          <ReservationCard
+            reservation={reservation}
+            calledAPI={calledAPI}
+            setCalledAPI={setCalledAPI}
+            setError={setError}
+          />
+        )
+    )
+  ) : (
+    <div className="mt-3">
+      <Link className=" btn btn-success nav-link" to="/reservations/new">
+        <span className="oi oi-plus" />
+        &nbsp;New Reservation
+      </Link>
+      <h2 className="mt-3">
+        No reservations for this day yet! Click to make one.
+      </h2>
+    </div>
+  );
+
   return (
     <main>
+      <nav class="navbar navbar-expand-lg navbar-light bg-link">
+        <h1>Welcome to Periodic Tables!</h1>
+      </nav>
       <ErrorAlert error={error} />
-      <h1>Dashboard</h1>
+      <h2>Dashboard</h2>
       <div className="row">
         <div className="col-md-6 col-sm-12">
           <div className="d-md-flex mb-3">
-            <h4 className="mb-0">Reservations for date {date}</h4>
+            <h4 className="mb-0">
+              Reservations for {new Date(date).toString().slice(0, 15)}
+            </h4>
           </div>
           <ErrorAlert error={reservationsError} />
           <button
@@ -41,48 +71,39 @@ export default function Dashboard({
           </button>
           <button
             type="button"
-            className="btn btn-secondary ml-1"
+            className="btn btn-primary ml-1"
             onClick={() => history.push(`/dashboard?date=${today()}`)}
           >
             Today
           </button>
           <button
             type="button"
-            className="btn btn-secondary ml-1"
+            className="btn btn-warning ml-1"
             onClick={() => history.push(`/dashboard?date=${next(date)}`)}
           >
             Next
           </button>
-          {reservations.map(
-            (reservation) =>
-              reservation.status !== "finished" &&
-              reservation.status !== "cancelled" && (
-                <ReservationCard
-                  reservation={reservation}
-                  calledAPI={calledAPI}
-                  setCalledAPI={setCalledAPI}
-                  setError={setError}
-                />
-              )
-          )}
+          {reservationsMap}
         </div>
         <div className="col-md-6 col-sm-12">
           <div className="d-md-flex mb-3">
             <h4>Tables</h4>
           </div>
           <ErrorAlert error={tablesError} />
-          {tables ? (
-            tables.map((table) => (
-              <TableCard
-                table={table}
-                calledAPI={calledAPI}
-                setCalledAPI={setCalledAPI}
-                setError={setError}
-              />
-            ))
-          ) : (
-            <h1>No Tables</h1>
-          )}
+          <div className="mt-3">
+            {tables ? (
+              tables.map((table) => (
+                <TableCard
+                  table={table}
+                  calledAPI={calledAPI}
+                  setCalledAPI={setCalledAPI}
+                  setError={setError}
+                />
+              ))
+            ) : (
+              <h1>No Tables</h1>
+            )}
+          </div>
         </div>
       </div>
     </main>
