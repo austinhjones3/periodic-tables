@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import { previous, today, next } from "../utils/date-time";
 import TableCard from "./tables/TableCard";
 import ReservationCard from "./reservations/ReservationCard";
+import moment from "moment";
 /**
  * Defines the dashboard page.
  * @param date
@@ -47,6 +48,10 @@ export default function Dashboard({
     </div>
   );
 
+  function formatDate() {
+    let dateString = new Date(date).toString().slice(0, 15);
+  }
+
   return (
     <main>
       <nav class="navbar navbar-expand-lg navbar-light bg-link">
@@ -58,7 +63,7 @@ export default function Dashboard({
         <div className="col-md-6 col-sm-12">
           <div className="d-md-flex mb-3">
             <h4 className="mb-0">
-              Reservations for {new Date(date).toString().slice(0, 15)}
+              Reservations for {moment(date).format("ddd MMMM Do, YYYY")}
             </h4>
           </div>
           <ErrorAlert error={reservationsError} />
