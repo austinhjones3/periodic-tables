@@ -48,10 +48,6 @@ export default function Dashboard({
     </div>
   );
 
-  function formatDate() {
-    let dateString = new Date(date).toString().slice(0, 15);
-  }
-
   return (
     <main>
       <nav class="navbar navbar-expand-lg navbar-light bg-link">

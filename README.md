@@ -168,7 +168,7 @@ data : {
 
 - table_name does not need to include a # sign, but it must be a string greater than one character.
 - capacity must be an integer greater than 0.
-- reservation_id is optional, butif one is passed, it must be the ID of a reservation that does exist in the database or very bad things will happen to your application... just kidding. You'll just get an error.
+- reservation_id is optional, but if one is passed, it must be the ID of a reservation that does exist in the database or very bad things will happen to your application... just kidding. You'll just get an error.
 
 Returns 201 and the created table.
 <br><br>
