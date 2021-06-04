@@ -6,7 +6,7 @@ import ErrorAlert from "../../layout/ErrorAlert";
 
 export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
   const history = useHistory();
-  const [reservation, setReservation] = useState({});
+  const [res, setRes] = useState({});
   const [filteredTables] = useState(filterTables());
   const [table, setTable] = useState(filteredTables[0]);
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
   useEffect(loadReservation, []);
   function loadReservation() {
     readReservation(reservation_id, abortController.signal)
-      .then(setReservation)
+      .then(setRes)
       .catch(setError);
   }
 
@@ -28,7 +28,7 @@ export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (reservation) {
+    if (res) {
       if (validateCapacity()) {
         updateTable(table.table_id, reservation_id, abortController.signal)
           .then(() => setCalledAPI(!calledAPI))
@@ -45,12 +45,14 @@ export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
   }
 
   function validateCapacity() {
-    return reservation.people <= table.capacity;
+    return res.people <= table.capacity;
   }
 
   return (
     <div>
-      <h2>Seat Party {reservation_id}</h2>
+      <h2>
+        Seat {res.first_name} {res.last_name}'s Party
+      </h2>
       <ErrorAlert error={error} />
       <form name="seat-party" onSubmit={handleSubmit}>
         <div className="form-group">
