@@ -7,7 +7,8 @@ import ErrorAlert from "../../layout/ErrorAlert";
 export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
   const history = useHistory();
   const [reservation, setReservation] = useState(null);
-  const [table, setTable] = useState(tables[0]);
+  const [filteredTables] = useState(filterTables());
+  const [table, setTable] = useState(filteredTables[0]);
   const [error, setError] = useState(null);
   const abortController = new AbortController();
   const {
@@ -19,6 +20,10 @@ export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
     readReservation(reservation_id, abortController.signal)
       .then(setReservation)
       .catch(setError);
+  }
+
+  function filterTables() {
+    return tables.filter((table) => !table.reservation_id);
   }
 
   async function handleSubmit(event) {
@@ -55,7 +60,7 @@ export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
             onChange={handleChange}
             name="table_id"
           >
-            {tables.map((table) => (
+            {filteredTables.map((table) => (
               <option value={table.table_id} key={table.table_id}>
                 {table.table_name} - {table.capacity}
               </option>
