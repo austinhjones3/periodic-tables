@@ -4,9 +4,9 @@ import { useRouteMatch, useHistory } from "react-router-dom";
 import { readReservation, updateTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 
-export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
+export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
   const history = useHistory();
-  const [reservation, setReservation] = useState(null);
+  const [reservation, setReservation] = useState({});
   const [filteredTables] = useState(filterTables());
   const [table, setTable] = useState(filteredTables[0]);
   const [error, setError] = useState(null);
@@ -32,7 +32,7 @@ export default function SeatParty({ date, calledAPI, setCalledAPI, tables }) {
       if (validateCapacity()) {
         updateTable(table.table_id, reservation_id, abortController.signal)
           .then(() => setCalledAPI(!calledAPI))
-          .then(history.push(`/dashboard?date=${date}`))
+          .then(() => history.push("/dashboard"))
           .catch(setError);
       } else {
         setError(() => new Error("party is too large for this table"));

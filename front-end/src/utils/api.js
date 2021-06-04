@@ -144,15 +144,16 @@ export async function updateReservationStatus(reservation_id, status, signal) {
 }
 
 export async function updateReservationDetails(
-  reservation_data,
+  reservation,
   reservation_id,
   signal
 ) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  reservation.people = +reservation.people;
   return await fetchJson(
     url,
     {
-      body: JSON.stringify({ data: reservation_data }),
+      body: JSON.stringify({ data: reservation }),
       headers,
       method: "PUT",
       signal,
