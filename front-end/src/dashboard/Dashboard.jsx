@@ -1,26 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
 import { useHistory, Link } from "react-router-dom";
-import { previous, today, next } from "../utils/date-time";
+import { StatesContext } from "../common/StatesContext";
 import TableCard from "./tables/TableCard";
 import ReservationCard from "./reservations/ReservationCard";
 import moment from "moment";
+import { previous, today, next } from "../utils/date-time";
+
 /**
  * Defines the dashboard page.
  * @param date
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-export default function Dashboard({
-  date,
-  tables,
-  reservations,
-  reservationsError,
-  tablesError,
-  calledAPI,
-  setCalledAPI,
-}) {
+export default function Dashboard() {
   const history = useHistory();
+  const {
+    date,
+    tables,
+    reservations,
+    reservationsError,
+    tablesError,
+    calledAPI,
+    setCalledAPI,
+  } = useContext(StatesContext);
   const [error, setError] = useState(null);
 
   const reservationsMap = reservations.length ? (

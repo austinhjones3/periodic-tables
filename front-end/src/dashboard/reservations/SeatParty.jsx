@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { readReservation, updateTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
+import { StatesContext } from "../../common/StatesContext";
 
-export default function SeatParty({ calledAPI, setCalledAPI, tables }) {
+export default function SeatParty() {
   const history = useHistory();
+  const { calledAPI, setCalledAPI, tables } = useContext(StatesContext);
   const [res, setRes] = useState({});
   const [filteredTables] = useState(filterTables());
   const [table, setTable] = useState(filteredTables[0]);

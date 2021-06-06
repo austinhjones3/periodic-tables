@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   createReservation,
@@ -8,8 +8,9 @@ import {
 } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 import { getDateInt, getTimeInt } from "../../utils/timeIntegers";
+import { StatesContext } from "../../common/StatesContext";
 
-export default function AddEditReservation({ calledAPI, setCalledAPI }) {
+export default function AddEditReservation() {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({});
@@ -17,7 +18,7 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
   const {
     params: { reservation_id },
   } = useRouteMatch();
-
+  const { calledAPI, setCalledAPI } = useContext(StatesContext);
   useEffect(loadReservation, []);
   function loadReservation() {
     if (reservation_id) {
@@ -103,26 +104,18 @@ export default function AddEditReservation({ calledAPI, setCalledAPI }) {
     return errorsArr;
   }
 
+  const apiCall = reservation_id ? updateReservationDetails : createReservation;
   function handleSubmit(event) {
     event.preventDefault();
     setErrors(null);
     const errorsArr = getErrors();
     if (!errorsArr.length) {
-      if (reservation_id) {
-        updateReservationDetails(formData, reservation_id)
-          .then(() => setCalledAPI(!calledAPI))
-          .then(() =>
-            history.push(`/dashboard?date=${formData.reservation_date}`)
-          )
-          .catch(setErrors);
-      } else {
-        createReservation(formData)
-          .then(() => setCalledAPI(!calledAPI))
-          .then(() =>
-            history.push(`/dashboard?date=${formData.reservation_date}`)
-          )
-          .catch(setErrors);
-      }
+      apiCall(formData, reservation_id)
+        .then(() => setCalledAPI(!calledAPI))
+        .then(() =>
+          history.push(`/dashboard?date=${formData.reservation_date}`)
+        )
+        .catch(setErrors);
     } else {
       setErrors(new Error(`${errorsArr.join(", ").trim()}`));
     }

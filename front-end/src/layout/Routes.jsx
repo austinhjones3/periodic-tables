@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import AddEditReservation from "../dashboard/reservations/AddEditReservation";
 import NewTable from "../dashboard/tables/NewTable";
 import SeatParty from "../dashboard/reservations/SeatParty";
@@ -9,6 +9,7 @@ import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
+import { StatesContext } from "../common/StatesContext";
 
 /**
  * Defines all the routes for the application.
@@ -28,6 +29,20 @@ export default function Routes() {
   const dateQuery = query.get("date");
   const date = dateQuery ? dateQuery : today();
 
+  const states = {
+    date,
+    tables,
+    setTables,
+    reservations,
+    setReservations,
+    reservationsError,
+    setReservationsError,
+    tablesError,
+    setTablesError,
+    calledAPI,
+    setCalledAPI,
+  };
+
   useEffect(loadReservations, [calledAPI, date]);
   function loadReservations() {
     const abortController = new AbortController();
@@ -44,57 +59,35 @@ export default function Routes() {
 
   return (
     <Switch>
-      <Route exact path="/">
-        <Redirect to={"/dashboard"} />
-      </Route>
-      <Route exact path="/tables/new">
-        <NewTable
-          date={date}
-          calledAPI={calledAPI}
-          setCalledAPI={setCalledAPI}
+      <StatesContext.Provider value={states}>
+        <Route exact path="/">
+          <Redirect to={"/dashboard"} />
+        </Route>
+        <Route exact path="/tables/new">
+          <NewTable
+            date={date}
+            calledAPI={calledAPI}
+            setCalledAPI={setCalledAPI}
+          />
+        </Route>
+        <Route exact path="/reservations/:reservation_id/edit">
+          <AddEditReservation
+            calledAPI={calledAPI}
+            setCalledAPI={setCalledAPI}
+          />
+        </Route>
+        <Route
+          exact
+          path="/reservations/:reservation_id/seat"
+          component={SeatParty}
         />
-      </Route>
-      <Route exact path="/reservations/:reservation_id/edit">
-        <AddEditReservation calledAPI={calledAPI} setCalledAPI={setCalledAPI} />
-      </Route>
-      <Route exact path="/reservations/:reservation_id/seat">
-        <SeatParty
-          date={date}
-          reservations={reservations}
-          setReservations={setReservations}
-          calledAPI={calledAPI}
-          setCalledAPI={setCalledAPI}
-          tables={tables}
-          setTables={setTables}
-        />
-      </Route>
-      <Route exact path="/reservations/new">
-        <AddEditReservation calledAPI={calledAPI} setCalledAPI={setCalledAPI} />
-      </Route>
-      <Route exact path="/reservations">
-        <Redirect to={"/dashboard"} />
-      </Route>
-      <Route exact path="/search">
-        <SearchMobileNumber
-          reservations={reservations}
-          setReservations={setReservations}
-          setReservationsError={setReservationsError}
-        />
-      </Route>
-      <Route path="/dashboard">
-        <Dashboard
-          date={date}
-          tables={tables}
-          reservations={reservations}
-          setReservations={setReservations}
-          reservationsError={reservationsError}
-          setReservationsError={setReservationsError}
-          setTables={setTables}
-          tablesError={tablesError}
-          calledAPI={calledAPI}
-          setCalledAPI={setCalledAPI}
-        />
-      </Route>
+        <Route exact path="/reservations/new" component={AddEditReservation} />
+        <Route exact path="/reservations">
+          <Redirect to={"/dashboard"} />
+        </Route>
+        <Route exact path="/search" component={SearchMobileNumber} />
+        <Route exact path="/dashboard" component={Dashboard} />
+      </StatesContext.Provider>
       <Route>
         <NotFound />
       </Route>
