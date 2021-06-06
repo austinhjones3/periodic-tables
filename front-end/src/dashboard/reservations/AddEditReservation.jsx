@@ -12,13 +12,14 @@ import { StatesContext } from "../../common/StatesContext";
 
 export default function AddEditReservation() {
   const history = useHistory();
+  const { calledAPI, setCalledAPI } = useContext(StatesContext);
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({});
   const [reservation, setReservation] = useState({});
   const {
     params: { reservation_id },
   } = useRouteMatch();
-  const { calledAPI, setCalledAPI } = useContext(StatesContext);
+
   useEffect(loadReservation, []);
   function loadReservation() {
     if (reservation_id) {

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { createTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
+import { StatesContext } from "../../common/StatesContext";
 
-export default function NewTable({ date, calledAPI, setCalledAPI }) {
+export default function NewTable() {
   const history = useHistory();
+  const { date, calledAPI, setCalledAPI } = useContext(StatesContext);
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
     table_name: "",

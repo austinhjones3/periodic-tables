@@ -63,19 +63,12 @@ export default function Routes() {
         <Route exact path="/">
           <Redirect to={"/dashboard"} />
         </Route>
-        <Route exact path="/tables/new">
-          <NewTable
-            date={date}
-            calledAPI={calledAPI}
-            setCalledAPI={setCalledAPI}
-          />
-        </Route>
-        <Route exact path="/reservations/:reservation_id/edit">
-          <AddEditReservation
-            calledAPI={calledAPI}
-            setCalledAPI={setCalledAPI}
-          />
-        </Route>
+        <Route exact path="/tables/new" component={NewTable} />
+        <Route
+          exact
+          path="/reservations/:reservation_id/edit"
+          component={AddEditReservation}
+        />
         <Route
           exact
           path="/reservations/:reservation_id/seat"
