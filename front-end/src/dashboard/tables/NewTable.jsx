@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { createTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
-import { StatesContext } from "../../common/StatesContext";
+import { StatesContext } from "../../common/Context";
 
 export default function NewTable() {
   const history = useHistory();

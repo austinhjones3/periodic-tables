@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import {
@@ -8,68 +7,37 @@ import {
 } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 import { getDateInt, getTimeInt } from "../../utils/timeIntegers";
-import { StatesContext } from "../../common/StatesContext";
+import { StatesContext } from "../../common/Context";
 
 export default function AddEditReservation() {
   const history = useHistory();
-  const { calledAPI, setCalledAPI } = useContext(StatesContext);
-  const [errors, setErrors] = useState(null);
-  const [formData, setFormData] = useState({});
-  const [reservation, setReservation] = useState({});
   const {
     params: { reservation_id },
   } = useRouteMatch();
+  const apiCall = reservation_id ? updateReservationDetails : createReservation;
+  const { calledAPI, setCalledAPI } = useContext(StatesContext);
+  const [errors, setErrors] = useState(null);
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: "",
+  });
 
-  useEffect(loadReservation, []);
+  useEffect(loadReservation, [reservation_id]);
   function loadReservation() {
+    setErrors(null);
     if (reservation_id) {
       readReservation(reservation_id)
         .then((response) => {
-          let {
-            first_name,
-            last_name,
-            mobile_number,
-            reservation_date,
-            reservation_time,
-            people,
-          } = response;
-          reservation_date = reservation_date.slice(0, 10);
-          setReservation(() => ({
-            ...reservation,
-            first_name,
-            last_name,
-            mobile_number,
-            reservation_date,
-            reservation_time,
-            people,
-          }));
-          setFormData(() => ({
-            ...formData,
-            first_name,
-            last_name,
-            mobile_number,
-            reservation_date,
-            reservation_time,
-            people,
-          }));
+          response.reservation_date = response.reservation_date.slice(0, 10);
+          return response;
         })
-        .then(console.log)
-        .catch(console.log);
-    } else {
-      setReservation({
-        first_name: "",
-        last_name: "",
-        mobile_number: "",
-        reservation_date: "",
-        reservation_time: "",
-        people: "",
-      });
+        .then(setFormData)
+        .catch(setErrors);
     }
-  }
-
-  useEffect(syncFormAndReservation, [reservation]);
-  function syncFormAndReservation() {
-    setFormData(() => ({ ...formData, ...reservation }));
   }
 
   function handleChange({ target }) {
@@ -105,7 +73,6 @@ export default function AddEditReservation() {
     return errorsArr;
   }
 
-  const apiCall = reservation_id ? updateReservationDetails : createReservation;
   function handleSubmit(event) {
     event.preventDefault();
     setErrors(null);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import AddEditReservation from "../dashboard/reservations/AddEditReservation";
 import NewTable from "../dashboard/tables/NewTable";
 import SeatParty from "../dashboard/reservations/SeatParty";
@@ -9,7 +9,7 @@ import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
-import { StatesContext } from "../common/StatesContext";
+import { StatesContext } from "../common/Context";
 
 /**
  * Defines all the routes for the application.
@@ -63,6 +63,9 @@ export default function Routes() {
         <Route exact path="/">
           <Redirect to={"/dashboard"} />
         </Route>
+        <Route exact path="/reservations">
+          <Redirect to={"/dashboard"} />
+        </Route>
         <Route exact path="/tables/new" component={NewTable} />
         <Route
           exact
@@ -75,9 +78,6 @@ export default function Routes() {
           component={SeatParty}
         />
         <Route exact path="/reservations/new" component={AddEditReservation} />
-        <Route exact path="/reservations">
-          <Redirect to={"/dashboard"} />
-        </Route>
         <Route exact path="/search" component={SearchMobileNumber} />
         <Route exact path="/dashboard" component={Dashboard} />
       </StatesContext.Provider>

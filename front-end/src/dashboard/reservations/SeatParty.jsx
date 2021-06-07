@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { readReservation, updateTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
-import { StatesContext } from "../../common/StatesContext";
+import { StatesContext } from "../../common/Context";
 
 export default function SeatParty() {
   const history = useHistory();

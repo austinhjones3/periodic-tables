@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useHistory, Link } from "react-router-dom";
-import { StatesContext } from "../common/StatesContext";
+import { Link } from "react-router-dom";
+import { StatesContext } from "../common/Context";
 import TableCard from "./tables/TableCard";
 import ReservationCard from "./reservations/ReservationCard";
 import moment from "moment";
-import { previous, today, next } from "../utils/date-time";
+import DateControl from "./DateControl";
 
 /**
  * Defines the dashboard page.
@@ -14,7 +14,6 @@ import { previous, today, next } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 export default function Dashboard() {
-  const history = useHistory();
   const {
     date,
     tables,
@@ -51,11 +50,27 @@ export default function Dashboard() {
     </div>
   );
 
+  const tablesMap = tables.length ? (
+    tables.map((table) => (
+      <TableCard
+        table={table}
+        calledAPI={calledAPI}
+        setCalledAPI={setCalledAPI}
+        setError={setError}
+      />
+    ))
+  ) : (
+    <div className="mt-3">
+      <Link className=" btn btn-success nav-link" to="/tables/new">
+        <span className="oi oi-plus" />
+        &nbsp;New Table
+      </Link>
+      <h2 className="mt-3">No tables in the system! Click to make one.</h2>
+    </div>
+  );
+
   return (
     <main>
-      <nav class="navbar navbar-expand-lg navbar-light bg-link">
-        <h1>Welcome to Periodic Tables!</h1>
-      </nav>
       <ErrorAlert error={error} />
       <h2>Dashboard</h2>
       <div className="row">
@@ -66,27 +81,7 @@ export default function Dashboard() {
             </h4>
           </div>
           <ErrorAlert error={reservationsError} />
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => history.push(`/dashboard?date=${previous(date)}`)}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary ml-1"
-            onClick={() => history.push(`/dashboard?date=${today()}`)}
-          >
-            Today
-          </button>
-          <button
-            type="button"
-            className="btn btn-warning ml-1"
-            onClick={() => history.push(`/dashboard?date=${next(date)}`)}
-          >
-            Next
-          </button>
+          <DateControl date={date} />
           {reservationsMap}
         </div>
         <div className="col-md-6 col-sm-12">
@@ -94,20 +89,7 @@ export default function Dashboard() {
             <h4>Tables</h4>
           </div>
           <ErrorAlert error={tablesError} />
-          <div className="mt-3">
-            {tables ? (
-              tables.map((table) => (
-                <TableCard
-                  table={table}
-                  calledAPI={calledAPI}
-                  setCalledAPI={setCalledAPI}
-                  setError={setError}
-                />
-              ))
-            ) : (
-              <h1>No Tables</h1>
-            )}
-          </div>
+          <div className="mt-3">{tablesMap}</div>
         </div>
       </div>
     </main>
