@@ -26,13 +26,10 @@ export default function ReservationCard({
   }
 
   function upperCaseStatus() {
-    return (
-      reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)
-    );
+    return reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1);
   }
 
-  function getStatusStyle() {
-    const style = { color: "" };
+  function getStatusStyle(style = {}) {
     if (reservation.status === "booked") {
       style.color = "green";
     }
