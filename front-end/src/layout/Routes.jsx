@@ -24,7 +24,12 @@ export default function Routes() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const [calledAPI, setCalledAPI] = useState(false);
-
+  /**
+   * FOUND A BUG!!!! The error states are managed poorly throughout the app.
+   * the context of the app needs to be reworked to be specific to the collections,
+   * functions, and errors, and error states need to be distributed throughout
+   * the app
+   */
   const query = useQuery();
   const dateQuery = query.get("date");
   const date = dateQuery ? dateQuery : today();
