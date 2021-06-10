@@ -7,7 +7,7 @@ import {
 } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 import { getDateInt, getTimeInt } from "../../utils/timeIntegers";
-import { StatesContext } from "../../common/Context";
+import { Context } from "../../common/Context";
 
 export default function AddEditReservation() {
   const history = useHistory();
@@ -15,7 +15,9 @@ export default function AddEditReservation() {
     params: { reservation_id },
   } = useRouteMatch();
   const apiCall = reservation_id ? updateReservationDetails : createReservation;
-  const { calledAPI, setCalledAPI } = useContext(StatesContext);
+  const {
+    Global: { calledAPI, setCalledAPI },
+  } = useContext(Context);
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
     first_name: "",
@@ -74,11 +76,12 @@ export default function AddEditReservation() {
   }
 
   function handleSubmit(event) {
+    const abortController = new AbortController();
     event.preventDefault();
     setErrors(null);
     const errorsArr = getErrors();
     if (!errorsArr.length) {
-      apiCall(formData, reservation_id)
+      apiCall(formData, abortController.signal, reservation_id)
         .then(() => setCalledAPI(!calledAPI))
         .then(() =>
           history.push(`/dashboard?date=${formData.reservation_date}`)

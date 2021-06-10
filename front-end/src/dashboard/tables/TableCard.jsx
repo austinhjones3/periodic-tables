@@ -1,28 +1,28 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { deletePartyFromTable } from "../../utils/api";
+import { Context } from "../../common/Context";
 
-export default function TableCard({
-  calledAPI,
-  setCalledAPI,
-  table,
-  setError,
-}) {
+export default function TableCard({ table }) {
+  const {
+    Global: { calledAPI, setCalledAPI },
+    Tables,
+  } = useContext(Context);
+
   function handleFinish() {
     const abortController = new AbortController();
-    setError(null);
+    Tables.setError(null);
     const answer = window.confirm(
       "Is this table ready to seat new guests? \n\nThis cannot be undone."
     );
     if (answer) {
       deletePartyFromTable(table.table_id, abortController.signal)
         .then(() => setCalledAPI(() => !calledAPI))
-        .catch(setError);
+        .catch(Tables.setError);
     }
   }
 
-  function getStatusStyle() {
-    const style = { color: "" };
+  function getStatusStyle(style = {}) {
     if (table.reservation_id) {
       style.color = "red";
     } else {

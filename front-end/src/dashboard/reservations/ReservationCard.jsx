@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { updateReservationStatus } from "../../utils/api";
+import { Context } from "../../common/Context";
 
-export default function ReservationCard({
-  reservation,
-  calledAPI,
-  setCalledAPI,
-  setError,
-}) {
+export default function ReservationCard({ reservation }) {
+  const {
+    Global: { calledAPI, setCalledAPI },
+    Reservations,
+  } = useContext(Context);
+
   function handleCancel() {
     const abortController = new AbortController();
-    setError(null);
+    Reservations.setError(null);
     const answer = window.confirm(
       "Do you want to cancel this reservation?\n\nThis cannot be undone."
     );
@@ -21,12 +22,14 @@ export default function ReservationCard({
         abortController.signal
       )
         .then(() => setCalledAPI(!calledAPI))
-        .catch(setError);
+        .catch(Reservations.setError);
     }
   }
 
   function upperCaseStatus() {
-    return reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1);
+    return (
+      reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)
+    );
   }
 
   function getStatusStyle(style = {}) {

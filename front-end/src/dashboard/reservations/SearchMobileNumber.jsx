@@ -1,36 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { listReservationsForPhoneNumber } from "../../utils/api";
 import ReservationCard from "./ReservationCard";
 import ErrorAlert from "../../layout/ErrorAlert";
+import { Context } from "../../common/Context";
 
 export default function SearchMobileNumber() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [findPressed, setFindPressed] = useState(false);
-  const [error, setError] = useState(null);
+  const {
+    Global: { calledAPI },
+    Reservations,
+  } = useContext(Context);
   const history = useHistory();
+
+  useEffect(search, [calledAPI]);
+  function search() {
+    if (mobileNumber) {
+      listReservationsForPhoneNumber(mobileNumber)
+        .then((response) => {
+          setFindPressed(true);
+          return response;
+        })
+        .then(setSearchResults)
+        .catch(Reservations.setError);
+    }
+  }
 
   function handleChange({ target }) {
     setMobileNumber(() => target.value);
   }
 
   function handleSubmit(event) {
-    const abortController = new AbortController();
-    setFindPressed(false);
     event.preventDefault();
-    listReservationsForPhoneNumber(mobileNumber, abortController.signal)
-      .then((response) => {
-        setFindPressed(true);
-        return response;
-      })
-      .then(setSearchResults)
-      .catch(setError);
+    setFindPressed(false);
+    search();
   }
 
   return (
     <div>
-      <ErrorAlert error={error} />
+      <ErrorAlert error={Reservations.error} />
       <form className="mt-2" name="search_for_number" onSubmit={handleSubmit}>
         <label html>
           <h2>Search by Mobile Number</h2>

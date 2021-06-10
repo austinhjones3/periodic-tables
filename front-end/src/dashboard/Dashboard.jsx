@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
 import { Link } from "react-router-dom";
-import { StatesContext } from "../common/Context";
+import { Context } from "../common/Context";
 import TableCard from "./tables/TableCard";
 import ReservationCard from "./reservations/ReservationCard";
 import moment from "moment";
@@ -15,27 +15,16 @@ import DateControl from "./DateControl";
  */
 export default function Dashboard() {
   const {
-    date,
-    tables,
-    reservations,
-    reservationsError,
-    tablesError,
-    calledAPI,
-    setCalledAPI,
-  } = useContext(StatesContext);
-  const [error, setError] = useState(null);
-
-  const reservationsMap = reservations.length ? (
-    reservations.map(
+    Global: { date },
+    Tables,
+    Reservations,
+  } = useContext(Context);
+  const reservationsMap = Reservations.list.length ? (
+    Reservations.list.map(
       (reservation) =>
         reservation.status !== "finished" &&
         reservation.status !== "cancelled" && (
-          <ReservationCard
-            reservation={reservation}
-            calledAPI={calledAPI}
-            setCalledAPI={setCalledAPI}
-            setError={setError}
-          />
+          <ReservationCard reservation={reservation} />
         )
     )
   ) : (
@@ -50,15 +39,8 @@ export default function Dashboard() {
     </div>
   );
 
-  const tablesMap = tables.length ? (
-    tables.map((table) => (
-      <TableCard
-        table={table}
-        calledAPI={calledAPI}
-        setCalledAPI={setCalledAPI}
-        setError={setError}
-      />
-    ))
+  const tablesMap = Tables.list.length ? (
+    Tables.list.map((table) => <TableCard table={table} />)
   ) : (
     <div className="mt-3">
       <Link className=" btn btn-success nav-link" to="/tables/new">
@@ -71,7 +53,6 @@ export default function Dashboard() {
 
   return (
     <main>
-      <ErrorAlert error={error} />
       <h2>Dashboard</h2>
       <div className="row">
         <div className="col-md-6 col-sm-12">
@@ -80,7 +61,7 @@ export default function Dashboard() {
               Reservations for {moment(date).format("ddd MMMM Do, YYYY")}
             </h4>
           </div>
-          <ErrorAlert error={reservationsError} />
+          <ErrorAlert error={Reservations.error} />
           <DateControl date={date} />
           {reservationsMap}
         </div>
@@ -88,7 +69,7 @@ export default function Dashboard() {
           <div className="d-md-flex mb-3">
             <h4>Tables</h4>
           </div>
-          <ErrorAlert error={tablesError} />
+          <ErrorAlert error={Tables.error} />
           <div className="mt-3">{tablesMap}</div>
         </div>
       </div>

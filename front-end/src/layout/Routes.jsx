@@ -9,7 +9,7 @@ import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
-import { StatesContext } from "../common/Context";
+import { Context } from "../common/Context";
 
 /**
  * Defines all the routes for the application.
@@ -24,28 +24,29 @@ export default function Routes() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const [calledAPI, setCalledAPI] = useState(false);
-  /**
-   * FOUND A BUG!!!! The error states are managed poorly throughout the app.
-   * the context of the app needs to be reworked to be specific to the collections,
-   * functions, and errors, and error states need to be distributed throughout
-   * the app
-   */
+
   const query = useQuery();
   const dateQuery = query.get("date");
   const date = dateQuery ? dateQuery : today();
 
-  const states = {
-    date,
-    tables,
-    setTables,
-    reservations,
-    setReservations,
-    reservationsError,
-    setReservationsError,
-    tablesError,
-    setTablesError,
-    calledAPI,
-    setCalledAPI,
+  const value = {
+    Global: {
+      date,
+      calledAPI,
+      setCalledAPI,
+    },
+    Reservations: {
+      list: reservations,
+      setList: setReservations,
+      error: reservationsError,
+      setError: setReservationsError,
+    },
+    Tables: {
+      list: tables,
+      setList: setTables,
+      error: tablesError,
+      setError: setTablesError,
+    },
   };
 
   useEffect(loadReservations, [calledAPI, date]);
@@ -64,7 +65,7 @@ export default function Routes() {
 
   return (
     <Switch>
-      <StatesContext.Provider value={states}>
+      <Context.Provider value={value}>
         <Route exact path="/">
           <Redirect to={"/dashboard"} />
         </Route>
@@ -85,7 +86,7 @@ export default function Routes() {
         <Route exact path="/reservations/new" component={AddEditReservation} />
         <Route exact path="/search" component={SearchMobileNumber} />
         <Route exact path="/dashboard" component={Dashboard} />
-      </StatesContext.Provider>
+      </Context.Provider>
       <Route>
         <NotFound />
       </Route>

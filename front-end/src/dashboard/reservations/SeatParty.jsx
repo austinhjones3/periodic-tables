@@ -3,11 +3,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { readReservation, updateTable } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
-import { StatesContext } from "../../common/Context";
+import { Context } from "../../common/Context";
 
 export default function SeatParty() {
   const history = useHistory();
-  const { calledAPI, setCalledAPI, tables } = useContext(StatesContext);
+  const {
+    Global: { calledAPI, setCalledAPI },
+    Tables,
+  } = useContext(Context);
   const [res, setRes] = useState({});
   const [filteredTables] = useState(filterTables());
   const [table, setTable] = useState(filteredTables[0]);
@@ -25,7 +28,7 @@ export default function SeatParty() {
   }
 
   function filterTables() {
-    return tables.filter((table) => !table.reservation_id);
+    return Tables.list.filter((table) => !table.reservation_id);
   }
 
   async function handleSubmit(event) {
@@ -43,7 +46,9 @@ export default function SeatParty() {
   }
 
   function handleChange({ target }) {
-    setTable(() => tables.find((entry) => +entry.table_id === +target.value));
+    setTable(() =>
+      Tables.list.find((entry) => +entry.table_id === +target.value)
+    );
   }
 
   function validateCapacity() {
